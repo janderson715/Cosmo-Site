@@ -63,7 +63,7 @@ The workflow section shows a different screenshot for each of the eight steps; t
 
 ## Changing where the contact form sends email
 
-GitHub Pages cannot send email, so the form goes through **FormSubmit** (formsubmit.co), a free service that emails each form to an address you choose. No account is needed.
+GitHub Pages cannot send email, so the form goes through **the site-forms Worker (Resend)** (formsubmit.co), a free service that emails each form to an address you choose. No account is needed.
 
 The address is set in **one line** of `contact.html`, the `<form>` tag:
 
@@ -75,15 +75,15 @@ Change the address in **both** places on that line: `data-email` is what the pag
 
 ### The one-time activation email
 
-The first time anyone sends the form to a new address, FormSubmit does not deliver the message. Instead it sends that address an email titled something like "Action Required: Activate FormSubmit". Open it and press **Activate Form**. From then on every request arrives as a normal email.
+The first time anyone sends the form to a new address, the site-forms Worker (Resend) does not deliver the message. Instead it sends that address an email titled something like "Action Required: Activate the site-forms Worker (Resend)". Open it and press **Activate Form**. From then on every request arrives as a normal email.
 
 So after you publish the site, or after you change the address: send yourself a test request from the live site, look for the activation email (check the spam folder), and press the button. Until you do, visitors see a "did not go through" message with the phone number and email, so no one is left stuck.
 
 ### Spam protection
 
-- The form has a hidden `_honey` field. People never see it; spam bots fill it in, and FormSubmit then drops the message.
-- FormSubmit's own "I am not a robot" check stays on for visitors without JavaScript. When JavaScript is on, the form is sent in the background and FormSubmit does not show that check; the hidden field still works.
-- After activation, FormSubmit can give you a random string to use instead of the email address, so the address is not visible in the page. If you use it, put that string in both places on the `<form>` line.
+- The form has a hidden `_honey` field. People never see it; spam bots fill it in, and the site-forms Worker (Resend) then drops the message.
+- the site-forms Worker (Resend)'s own "I am not a robot" check stays on for visitors without JavaScript. When JavaScript is on, the form is sent in the background and the site-forms Worker (Resend) does not show that check; the hidden field still works.
+- After activation, the site-forms Worker (Resend) can give you a random string to use instead of the email address, so the address is not visible in the page. If you use it, put that string in both places on the `<form>` line.
 
 The email subject is set by `<input type="hidden" name="_subject" ...>` just below the `<form>` line.
 
@@ -100,4 +100,4 @@ The page fades sections in as you scroll, floats the hero laptop, draws a slow s
 
 ## Privacy
 
-The site loads nothing from other websites: no web fonts, no analytics, no trackers. It uses the computer's own system fonts. The only outside request is the contact form going to FormSubmit when someone presses Send.
+The site loads nothing from other websites: no web fonts, no analytics, no trackers. It uses the computer's own system fonts. The only outside request is the contact form going to the site-forms Worker (Resend) when someone presses Send.

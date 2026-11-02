@@ -293,7 +293,7 @@
   var form = document.querySelector('form[data-email]');
   if (!form || !window.fetch) return;
   var email = form.getAttribute('data-email').trim();
-  form.setAttribute('action', 'https://formsubmit.co/' + email);
+  form.setAttribute('action', 'https://site-forms.janderson-6f5.workers.dev');
   var status = document.getElementById('form-status');
   var button = form.querySelector('button[type="submit"]');
   var label = button ? button.textContent : '';
@@ -306,7 +306,7 @@
     if (data._honey) return;
     delete data._next;
     if (button) { button.disabled = true; button.textContent = 'Sending...'; }
-    fetch('https://formsubmit.co/ajax/' + email, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) })
+    fetch('https://site-forms.janderson-6f5.workers.dev', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (res.ok && String(res.j.success) === 'true') { form.reset(); form.hidden = true; show('Thank you. Your message has been sent. We will be in touch to set up your demo.', false); }
