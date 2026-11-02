@@ -1337,3 +1337,10 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
 @keyframes feed-scroll { to { transform: translateY(-50%); } }
 @media (max-width: 760px){ .live-main { height: 320px; } .live-feed { flex-basis: 150px; } }
 @media (prefers-reduced-motion: reduce){ .globe-lights,.globe-grid,.arc,.bars i,.feed-list,.tp,.live-on i { animation: none !important; } .feed-list { transform: none; } .bars i { height: var(--h,60%); } }
+
+/* Real MacBook frame (logo wiped) for the carousel and close-ups; screenshots show in full, never cropped */
+.mbk { position: relative; width: 100%; max-width: 1040px; margin: 0 auto; aspect-ratio: 1208 / 700; }
+.mbk-glass { position: absolute; left: 9.7%; top: 3.1%; width: 80.6%; height: 88.8%; overflow: hidden; background: #05070f; z-index: 1; }
+.mbk-glass img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.mbk-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.feature-media .mbk { max-width: none; }
