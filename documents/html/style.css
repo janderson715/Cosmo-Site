@@ -107,6 +107,9 @@ figure.shot .win .bar i { width: 8px; height: 8px; border-radius: 50%; } figure.
 figure.shot .win .bar span { margin: 0 auto; font: 400 6.6pt var(--f); color: #616161; background: #fff; padding: 1px 40px; border-radius: 4px; }
 figure.shot img { display: block; width: 100%; }
 figure.shot.crop img { object-fit: cover; object-position: var(--pos, top left); height: var(--h); }
+/* Ray, 2026-11-03: a screenshot is never cropped. The box takes the picture's own proportions (the app window's 1.59), so the top bar, menu and bottom are all in view. */
+figure.shot.crop img { object-fit: contain; height: auto !important; min-height: 0 !important; max-height: none !important; flex: none !important; }
+.in > figure.shot.crop, .in > figure.shot.crop .win { flex: none !important; }
 .in > figure.shot.crop { flex: 1 0 auto; display: flex; flex-direction: column; }
 .in > figure.shot.crop .win { flex: 1 0 auto; display: flex; flex-direction: column; }
 .in > figure.shot.crop img { flex: 1 0 var(--h); height: 0; min-height: var(--h); max-height: 6.2in; }
