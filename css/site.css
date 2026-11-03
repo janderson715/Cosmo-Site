@@ -168,7 +168,9 @@ strong { color: var(--ink); font-weight: 600; }
 @media (max-width: 560px) { .cap-grid { grid-template-columns: 1fr; } }
 
 .hero-shot { margin: 0; }
-.hero-shot img { display: block; width: 100%; height: auto; border: 1px solid var(--border-2); box-shadow: 0 40px 90px rgba(0, 0, 0, .6); }
+.hero-shot img, .hero-shot video { display: block; width: 100%; height: auto; background: #04071a; border: 1px solid var(--border-2); box-shadow: 0 40px 90px rgba(0, 0, 0, .6); }
+.hero-shot .hero-still { display: none; }
+@media (prefers-reduced-motion: reduce) { .hero-shot video { display: none; } .hero-shot .hero-still { display: block; } }
 .float-card { position: absolute; z-index: 3; border-radius: 0; overflow: hidden; background: #fff; box-shadow: 0 30px 70px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .1); }
 .float-card img { width: 100%; }
 .float-card.workorder { width: clamp(220px, 32%, 340px); left: -4%; bottom: 16%; }
@@ -1350,3 +1352,19 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
 .mbk-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px), linear-gradient(115deg, rgba(255,255,255,.07) 0, rgba(255,255,255,0) 32%); box-shadow: inset 0 0 0 3px #000, inset 0 0 18px 4px rgba(0,0,0,.7); }
 .mbk-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .feature-media .mbk { max-width: none; }
+
+/* Spiral galaxy behind the main screen at the top. It turns with the scroll, like the shooting stars, and back when you scroll up. */
+.hero-stage > .galaxy { position: absolute; inset: -34% -22%; z-index: 0; pointer-events: none; }
+.hero-stage > .hero-shot { position: relative; z-index: 1; }
+.galaxy img { position: absolute; left: 50%; top: 50%; width: min(1700px, 100%); min-width: 560px; max-width: none; height: auto; opacity: .9; transform: translate(-50%, -50%) rotate(var(--gx, 0deg)); will-change: transform; -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 70%); mask-image: radial-gradient(circle, #000 50%, transparent 70%); }
+@media (max-width: 860px) { .hero-stage > .galaxy { inset: -20% -40%; } .galaxy img { min-width: 480px; opacity: .8; } }
+
+/* Tighter join between "what it is" and the Bot section: the two sections' big paddings added up to a huge empty band (Ray, 2026-11-03). */
+.section.intro { padding-bottom: clamp(20px, 2.5vw, 36px); }
+.section.intro + .section.dark { padding-top: clamp(28px, 3.5vw, 48px); }
+
+/* The hero screen is narrower than the stage so the galaxy behind it shows all round it. */
+.hero-stage > .hero-shot { max-width: min(860px, 84%); margin: 0 auto; }
+.hero-stage > .galaxy { inset: -40% -30%; }
+.galaxy img { opacity: 1; }
+@media (max-width: 860px) { .hero-stage > .hero-shot { max-width: 100%; } .hero-stage > .galaxy { inset: -25% -55%; } }

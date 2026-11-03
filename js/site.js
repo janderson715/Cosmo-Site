@@ -261,6 +261,26 @@
     render();
   });
 
+  // Spiral galaxy behind a section: a pure function of scroll position, so it turns back when you scroll up.
+  var galaxies = Array.prototype.slice.call(document.querySelectorAll('.galaxy'));
+  if (galaxies.length && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    var gTick = false;
+    var spin = function () {
+      gTick = false;
+      var vh = window.innerHeight;
+      galaxies.forEach(function (g) {
+        var sec = g.closest('section') || g.parentElement, r = sec.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        var p = (vh - r.top) / (r.height + vh);
+        g.style.setProperty('--gx', (p * 220 - 60).toFixed(1) + 'deg');
+      });
+    };
+    var onScroll = function () { if (!gTick) { gTick = true; window.requestAnimationFrame(spin); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    spin();
+  }
+
   // Views carousel: flip through interface screenshots.
   Array.prototype.forEach.call(document.querySelectorAll('[data-carousel]'), function (car) {
     var track = car.querySelector('.caro-track');
