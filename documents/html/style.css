@@ -1,0 +1,222 @@
+/* The C.O.S.M.O Handbook, printed edition, in Material Design (the system MUI implements for React):
+   Roboto, Material icons, MUI elevation shadows, Card / Alert / Stepper / Table / Chip anatomy,
+   themed for C.O.S.M.O: primary = C.O.S.M.O blue, secondary = C.O.S.M.O orange. Navy only on the cover and chapter dividers. */
+@font-face { font-family: 'Roboto'; src: url(fonts/roboto-latin-300-normal.woff2) format('woff2'); font-weight: 300; }
+@font-face { font-family: 'Roboto'; src: url(fonts/roboto-latin-400-normal.woff2) format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Roboto'; src: url(fonts/roboto-latin-500-normal.woff2) format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Roboto'; src: url(fonts/roboto-latin-700-normal.woff2) format('woff2'); font-weight: 700; }
+@font-face { font-family: 'Roboto Mono'; src: url(fonts/roboto-mono-latin-400-normal.woff2) format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Roboto Mono'; src: url(fonts/roboto-mono-latin-500-normal.woff2) format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Geist'; src: url(fonts/geist.woff2) format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Geist Mono'; src: url(fonts/geist-mono.woff2) format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Raleway'; src: url(fonts/raleway-latin-800-normal.woff2) format('woff2'); font-weight: 800; }
+
+:root {
+  /* MUI theme */
+  --primary: #0e72bb; --primary-dark: #0a5590; --primary-light: #e3f1fb;
+  --secondary: #f7931e; --secondary-dark: #c26b00;
+  --error: #d32f2f; --warning: #ed6c02; --info: #0288d1; --success: #2e7d32; --purple: #7b1fa2;
+  --text: rgba(0,0,0,.87); --text2: rgba(0,0,0,.6); --text3: rgba(0,0,0,.38); --divider: rgba(0,0,0,.12); --grey100: #f5f5f5; --grey50: #fafafa;
+  --e1: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+  --e2: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+  --e4: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  --e8: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+  --navy: #02051a; --navy-2: #0b1a66;
+  --f: 'Roboto', 'Helvetica Neue', Arial, sans-serif; --f-mono: 'Roboto Mono', monospace;
+}
+@page { size: 8.5in 11in; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; }
+body { font: 400 10.3pt/1.6 var(--f); color: var(--text); letter-spacing: .00938em; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+a { color: var(--primary); text-decoration: none; }
+b, strong { font-weight: 500; color: var(--text); }
+code, .mono { font-family: var(--f-mono); font-size: .86em; }
+code { background: var(--grey100); color: #37474f; padding: .1em .4em; border-radius: 4px; white-space: nowrap; }
+
+/* ---------- page: app bar on top, caption footer ---------- */
+.page { width: 8.5in; height: 11in; position: relative; overflow: hidden; break-after: page; page-break-after: always; background: #fff; }
+.page > .in { position: absolute; inset: .92in .72in .78in .72in; display: flex; flex-direction: column; }
+.page .hdr { position: absolute; top: 0; left: 0; right: 0; height: .5in; display: flex; align-items: center; gap: 12px; padding: 0 .72in; background: var(--primary); color: #fff; box-shadow: var(--e4); font: 500 8pt/1 var(--f); letter-spacing: .02em; }
+.page .hdr img { height: 18px; filter: brightness(0) invert(1); }
+.page .hdr .sp { flex: 1; }
+.page .hdr .ch { font-weight: 400; opacity: .9; }
+.page .ftr { position: absolute; bottom: .32in; left: .72in; right: .72in; display: flex; justify-content: space-between; align-items: center; font: 400 7.5pt/1 var(--f); color: var(--text2); letter-spacing: .03em; }
+.page .ftr .n { font: 500 9pt/1 var(--f); color: var(--text); }
+.page .ftr .tabs { display: flex; gap: 6px; } .page .ftr .tabs i { width: 7px; height: 7px; border-radius: 50%; background: #bdbdbd; } .page .ftr .tabs i.on { background: var(--primary); }
+
+/* ---------- typography (MUI variants) ---------- */
+.kicker { font: 500 7.6pt/1 var(--f); letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin: 0 0 8px; }
+h1, h2, h3, h4 { margin: 0; color: var(--text); font-family: var(--f); }
+h2.t { font: 400 24pt/1.17 var(--f); letter-spacing: 0; margin: 0 0 8px; }
+h3 { font: 500 13pt/1.3 var(--f); letter-spacing: .0075em; margin: 18px 0 8px; }
+h4 { font: 500 10.5pt/1.4 var(--f); margin: 12px 0 5px; letter-spacing: .0075em; }
+p { margin: 0 0 8px; }
+.lead { font: 400 12pt/1.6 var(--f); color: var(--text2); margin-bottom: 16px; }
+.lead b { color: var(--text); }
+.small { font-size: 8.4pt; color: var(--text2); }
+ul.b, ol.b { margin: 4px 0 10px; padding-left: 0; list-style: none; }
+ul.b li { position: relative; padding-left: 16px; margin: 3px 0; }
+ul.b li::before { content: ''; position: absolute; left: 3px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--text2); }
+
+/* ---------- MUI vertical Stepper ---------- */
+ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 6px 0 12px; }
+ol.steps > li { counter-increment: s; position: relative; padding: 1px 0 12px 36px; }
+ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--primary); color: #fff; font: 500 9pt/1 var(--f); }
+ol.steps > li::after { content: ''; position: absolute; left: 11.5px; top: 28px; bottom: 2px; border-left: 1px solid #bdbdbd; }
+ol.steps > li:last-child::after { display: none; }
+ol.steps > li > b:first-child { display: block; font-weight: 500; line-height: 24px; }
+
+/* ---------- layout ---------- */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } .cols.c3 { grid-template-columns: repeat(3, 1fr); gap: 14px; } .cols.c4 { grid-template-columns: repeat(4, 1fr); gap: 12px; } .cols.w { grid-template-columns: 1.35fr 1fr; } .cols.nw { grid-template-columns: 1fr 1.35fr; }
+
+/* ---------- MUI Card with CardHeader avatar ---------- */
+.card { background: #fff; border-radius: 4px; box-shadow: var(--e1); padding: 14px 16px; position: relative; }
+.card .chd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.card .chd h4 { margin: 0; font-size: 10.5pt; }
+.card .av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; background: #546e7a; color: #fff; }
+.card.hl .av { background: var(--secondary); color: #000; } .card.bl .av { background: var(--primary); }
+.card p, .card li { font-size: 9.4pt; color: var(--text2); }
+.card p b, .card li b { color: var(--text); }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+.card h4 { margin-top: 0; }
+.card > .kicker { color: var(--text2); }
+
+/* ---------- MUI Alert, outlined ---------- */
+.note { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; border: 1px solid; border-radius: 4px; padding: 9px 14px 10px; margin: 8px 0 12px; font-size: 9.4pt; background: #fff; }
+.note .ni { display: block; padding-top: 1px; }
+.note b.h { display: block; font: 500 10pt/1.5 var(--f); margin-bottom: 2px; }
+.note.tip { border-color: var(--info); color: #014361; } .note.tip .ni { color: var(--info); }
+.note.warn { border-color: var(--warning); color: #663c00; } .note.warn .ni { color: var(--warning); }
+.note.admin { border-color: var(--purple); color: #4a148c; } .note.admin .ni { color: var(--purple); }
+.note.why { border-color: var(--success); color: #1e4620; } .note.why .ni { color: var(--success); }
+.note b, .note b.h { color: inherit; }
+.note code { background: rgba(0,0,0,.06); }
+
+/* ---------- code ---------- */
+.term { background: #1e1e1e; border-radius: 4px; box-shadow: var(--e2); margin: 6px 0 12px; overflow: hidden; }
+.term .bar { display: flex; align-items: center; gap: 6px; padding: 7px 12px; background: #2d2d2d; font: 500 7pt var(--f); color: #bdbdbd; letter-spacing: .06em; text-transform: uppercase; }
+.term .bar i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; } .term .bar i:nth-child(1) { background: #ff5f57; } .term .bar i:nth-child(2) { background: #febc2e; } .term .bar i:nth-child(3) { background: #28c840; } .term .bar span { margin-left: 6px; }
+.term pre { margin: 0; padding: 11px 14px; font: 400 8.2pt/1.65 var(--f-mono); color: #e0e0e0; white-space: pre-wrap; word-break: break-all; }
+.term pre .c { color: #8a8a8a; } .term pre .p { color: #64b5f6; }
+
+/* ---------- screenshots ---------- */
+figure.shot { margin: 6px 0 12px; }
+figure.shot .win { overflow: hidden; border-radius: 4px; background: #000; box-shadow: var(--e8); }
+figure.shot .win .bar { height: 18px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: #e0e0e0; }
+figure.shot .win .bar i { width: 8px; height: 8px; border-radius: 50%; } figure.shot .win .bar i:nth-child(1) { background: #ff5f57; } figure.shot .win .bar i:nth-child(2) { background: #febc2e; } figure.shot .win .bar i:nth-child(3) { background: #28c840; }
+figure.shot .win .bar span { margin: 0 auto; font: 400 6.6pt var(--f); color: #616161; background: #fff; padding: 1px 40px; border-radius: 4px; }
+figure.shot img { display: block; width: 100%; }
+figure.shot.crop img { object-fit: cover; object-position: var(--pos, top left); height: var(--h); }
+/* Ray, 2026-11-03: a screenshot is never cropped. The box takes the picture's own proportions (the app window's 1.59), so the top bar, menu and bottom are all in view. */
+figure.shot.crop img { object-fit: contain; height: auto !important; min-height: 0 !important; max-height: none !important; flex: none !important; }
+.in > figure.shot.crop, .in > figure.shot.crop .win { flex: none !important; }
+.in > figure.shot.crop { flex: 1 0 auto; display: flex; flex-direction: column; }
+.in > figure.shot.crop .win { flex: 1 0 auto; display: flex; flex-direction: column; }
+.in > figure.shot.crop img { flex: 1 0 var(--h); height: 0; min-height: var(--h); max-height: 6.2in; }
+figure.shot figcaption, .dgcap { margin: 8px 0 0; font: 400 8pt/1.5 var(--f); color: var(--text2); letter-spacing: .03em; }
+figure.shot figcaption b, .dgcap b { font-weight: 500; color: var(--text); margin-right: 6px; }
+.dgcap { margin: -2px 0 12px; }
+.mark { position: absolute; transform: translate(-50%,-50%); width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 500 10pt/1 var(--f); color: #000; background: var(--secondary); box-shadow: var(--e4); }
+
+/* ---------- MUI Table (in a Paper) ---------- */
+table.t { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 8.9pt; margin: 6px 0 12px; border-radius: 4px; box-shadow: var(--e1); overflow: hidden; background: #fff; }
+table.t th { text-align: left; font: 500 8.4pt/1.4 var(--f); color: var(--text); padding: 8px 12px; border-bottom: 1px solid #e0e0e0; background: var(--grey50); }
+table.t td { padding: 7px 12px; border-bottom: 1px solid #e0e0e0; vertical-align: top; color: var(--text); }
+table.t tr:last-child td { border-bottom: 0; }
+table.t td:first-child { font-weight: 500; }
+table.t.tight { font-size: 8.4pt; } table.t.tight td { padding: 5px 12px; } table.t.tight th { padding: 6px 12px; }
+
+/* ---------- Material 3 assist chip (8 dp corners, not a pill) ---------- */
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 10px 0 8px; border: 1px solid #c4c7c5; border-radius: 4px; font: 500 8pt/1 var(--f); color: var(--text); white-space: nowrap; background: #fff; margin: 2px 4px 2px 0; }
+.chip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #9e9e9e; flex: none; }
+.chip.o::before { background: var(--secondary); } .chip.b::before { background: var(--primary); } .chip.r::before { background: var(--error); } .chip.g::before { background: var(--success); }
+.pill-row { display: flex; flex-wrap: wrap; gap: 0; margin: 6px 0 10px; }
+.sev { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; }
+
+/* ---------- MUI horizontal Stepper ---------- */
+.stepbar { display: flex; align-items: center; justify-content: space-between; margin: 0 0 16px; padding: 9px 12px; background: #fff; border-radius: 4px; box-shadow: var(--e1); }
+.stepbar span { display: flex; align-items: center; gap: 5px; font: 400 7.2pt/1 var(--f); color: var(--text2); white-space: nowrap; flex: none; }
+.stepbar span:not(:last-child)::after { content: ""; width: 8px; height: 1px; background: #bdbdbd; margin: 0 4px; }
+.stepbar span em { font-style: normal; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: #9e9e9e; color: #fff; font: 500 7.6pt/1 var(--f); }
+.stepbar span.on { color: var(--text); font-weight: 500; } .stepbar span.on em { background: var(--primary); }
+.stepbar span.act em { background: var(--error); } .stepbar span.act { color: var(--error); font-weight: 500; }
+
+/* ---------- contents (MUI List) ---------- */
+.toc-row { display: flex; align-items: baseline; gap: 8px; padding: 2.4px 0; font-size: 9.6pt; color: var(--text); }
+.toc-row .d { flex: 1; border-bottom: 1px dotted #bdbdbd; transform: translateY(-3px); }
+.toc-row .pg { font: 500 9pt var(--f); color: var(--primary); }
+.toc-row.sub { font-size: 8.4pt; color: var(--text2); padding-left: 26px; }
+.toc-row.sub .pg { color: var(--text2); font-weight: 400; }
+
+/* ---------- diagrams on a Paper ---------- */
+.dg { margin: 4px 0 10px; border-radius: 4px; background: #fff; box-shadow: var(--e1); overflow: hidden; }
+.dg svg { display: block; width: 100%; height: auto; }
+
+/* ---------- logo walls: MUI image list of small cards ---------- */
+.logos { display: grid; grid-template-columns: repeat(var(--n, 6), 1fr); gap: 8px; margin: 6px 0 12px; }
+.lg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 4px 8px; text-align: center; min-height: 64px; background: #fff; border-radius: 4px; box-shadow: var(--e1); }
+.lg img, .lg .badge { height: 24px; width: auto; max-width: 74px; }
+.lg span { font: 400 7.2pt/1.2 var(--f); color: var(--text2); }
+
+dl.kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 4px 0 10px; font-size: 8.8pt; } dl.kv dt { color: var(--text2); } dl.kv dd { margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 10px 0 14px; }
+.stat { padding: 12px 14px; border-radius: 4px; box-shadow: var(--e1); background: #fff; }
+.stat b { display: block; font: 400 26pt/1.1 var(--f); color: var(--text); } .stat span { font: 500 7.4pt/1.3 var(--f); color: var(--text2); letter-spacing: .08em; text-transform: uppercase; }
+.stat.o b { color: var(--secondary-dark); } .stat.b b { color: var(--primary); }
+.swatch { border-radius: 4px; overflow: hidden; box-shadow: var(--e1); } .swatch .c { height: 56px; } .swatch .m { padding: 8px 10px; font-size: 7.6pt; } .swatch .m b { display: block; font-size: 8.6pt; } .swatch .m code { font-size: 7pt; }
+.spacer { flex: 1; }
+.hr { height: 1px; background: var(--divider); margin: 10px 0 12px; }
+
+/* ---------- dark pages: cover, chapter dividers, back cover ---------- */
+.page.dark, .page.cover, .page.back, .page.opener { background: var(--navy); color: #c9d3f2; }
+.page.dark::before, .page.cover::before, .page.back::before, .page.opener::before { content: ''; position: absolute; inset: 0; background: var(--stars) repeat; opacity: .55; pointer-events: none; }
+.page.cover .chip, .page.opener .chip { color: #fff; }
+.opener { background: radial-gradient(70% 45% at 85% 12%, rgba(247,147,30,.32), rgba(247,147,30,0) 70%), radial-gradient(90% 60% at 10% 0%, rgba(14,60,190,.6), rgba(2,5,26,0) 65%), radial-gradient(80% 50% at 50% 110%, rgba(11,26,102,.7), rgba(2,5,26,0) 70%), var(--navy) !important; }
+.opener .in { justify-content: flex-end; z-index: 3; inset: .78in .72in .74in .72in; }
+.opener .num { position: absolute; top: .9in; right: .55in; font: 800 170pt/0.8 'Raleway', var(--f); letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1.4px rgba(255,180,87,.55); z-index: 2; }
+.opener .part { font: 650 7.5pt/1 var(--f); letter-spacing: .3em; text-transform: uppercase; color: #4eabff; margin-bottom: 14px; }
+.opener h1 { font: 680 38pt/1.02 var(--f); letter-spacing: -.035em; margin-bottom: 14px; max-width: 6in; color: #fff; }
+.opener .sum { font: 400 12pt/1.55 var(--f); color: #d5ddff; max-width: 5.6in; margin-bottom: 26px; }
+.opener .toc { border-top: 1px solid rgba(255,255,255,.14); padding-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 26px; }
+.opener .toc a { display: flex; justify-content: space-between; gap: 10px; font: 500 9pt/1.4 var(--f); color: #eef2ff; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+.opener .toc a span:last-child { font-family: var(--f-mono); color: #ffb457; }
+.opener .art { position: absolute; left: .9in; right: -1.6in; top: 1.55in; transform: perspective(1600px) rotateY(-16deg) rotateX(7deg) rotateZ(-1deg); transform-origin: left center;
+  -webkit-mask-image: linear-gradient(180deg, #000 40%, rgba(0,0,0,0) 92%), linear-gradient(90deg, #000 60%, rgba(0,0,0,0)); -webkit-mask-composite: source-in; opacity: .92; }
+.opener .art .win { overflow: hidden; border: 1px solid rgba(255,255,255,.25); box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 90px rgba(47,127,255,.35); }
+.opener .art .bar { height: 16px; display: flex; gap: 5px; align-items: center; padding: 0 9px; background: #0a0e2a; } .opener .art .bar i { width: 7px; height: 7px; border-radius: 50%; background: #3a4170; }
+.opener .art img { display: block; width: 100%; }
+.opener::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 6.6in; background: linear-gradient(180deg, rgba(2,5,26,0), rgba(2,5,26,.9) 36%, #02051a 70%); z-index: 1; }
+.opener .ftr { z-index: 3; border-top-color: rgba(255,255,255,.12); color: #5d6894; } .opener .ftr .n { color: #ffb457; } .opener .ftr .n::after { display: none; }
+.baked::before, .baked::after { display: none !important; }
+
+.page.cover .chip { background: transparent; border-color: rgba(255,255,255,.35); color: #fff; }
+
+/* ===== pass 3: flat, outlined (MUI "outlined" variants), nothing squeezed ===== */
+.page > .in > * { flex-shrink: 0; }                         /* never squash a figure to make a page fit: overflow must be fixed, not hidden */
+.card, table.t, .dg, .stepbar, .lg, .stat, .swatch { box-shadow: none !important; border: 1px solid #e0e0e0; }
+.card { border-radius: 4px; }
+table.t { border-radius: 4px; }
+.dg { border-radius: 4px; }
+.stepbar { border-radius: 4px; }
+.lg { border-radius: 4px; }
+.page .hdr { box-shadow: none; }
+/* screenshots: just the picture, a hairline and rounded corners; no fake window, no shadow */
+figure.shot .win { box-shadow: none; border: 1px solid #d5d9e0; border-radius: 4px; }
+figure.shot .win .bar { display: none; }
+figure.shot figcaption { margin-top: 8px; }
+.cols { gap: 24px; }
+.cols > figure.shot, .cols > div > figure.shot { margin-top: 0; }
+.mark { box-shadow: 0 0 0 3px #fff; }
+/* neat lists in columns instead of rows of tags */
+ul.b.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px 14px; } ul.b.grid3 li { margin: 2px 0; }
+ul.b.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 14px; }
+.pill-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px 14px; margin: 6px 0 10px; }
+.pill-row .chip { border: 0; padding: 0 0 0 15px; height: auto; margin: 0; background: none; font: 400 9.2pt/1.5 var(--f); white-space: normal; position: relative; display: block; }
+.pill-row .chip::before { position: absolute; left: 3px; top: .62em; width: 5px; height: 5px; background: var(--text2); }
+ul.b.nodot li { padding-left: 0; } ul.b.nodot li::before { display: none; }
+.chips-demo { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
+.page.cover::before { display: none; }
+.cols.notes { gap: 14px 18px; align-items: stretch; margin-bottom: 12px; } .cols.notes > .note { margin: 0; }
+.cols > .card { display: flex; flex-direction: column; } .cols > .card > p.small:last-child { margin-top: auto; padding-top: 6px; }
+.t.cfg td:first-child{width:47%}
+.card.act .av { background: var(--error); }
