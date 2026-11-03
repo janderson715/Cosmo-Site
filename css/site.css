@@ -1080,8 +1080,8 @@ html:not(.js) .demo-ctrl { display: none; }
 .morph-glass { position: absolute; left: 9.7%; top: 3.1%; width: 80.6%; height: 88.8%; overflow: hidden; z-index: 1; background: #000; }
 /* whole screenshot always shown (never cropped), inside a thin black edge on a lit panel */
 .morph-glass::before { content: ""; position: absolute; inset: 2.7% 1.9%; z-index: 0; background: #11172a; }
-.morph-glass img { position: absolute; z-index: 1; inset: 2.7% 1.9%; width: 96.2%; height: 94.6%; object-fit: contain; object-position: center; mix-blend-mode: screen; border: 1px solid #1b1b20; will-change: transform; }
-.morph-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px), linear-gradient(115deg, rgba(255,255,255,.07) 0, rgba(255,255,255,0) 32%); box-shadow: inset 0 0 0 2px #000, inset 0 0 0 3px rgba(130,134,150,.5), inset 0 0 18px 4px rgba(0,0,0,.7); }
+.morph-glass img { position: absolute; z-index: 1; inset: 2.7% 1.9%; width: 96.2%; height: 94.6%; object-fit: contain; object-position: center; mix-blend-mode: screen; border: 0; will-change: transform; }
+.morph-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px), linear-gradient(115deg, rgba(255,255,255,.07) 0, rgba(255,255,255,0) 32%); box-shadow: inset 0 0 0 3px #000, inset 0 0 18px 4px rgba(0,0,0,.7); }
 .morph-texts { position: absolute; inset: 0; pointer-events: none; }
 .morph-texts .mstep { position: absolute; top: 50%; width: min(19%, 300px); opacity: 0; transform: translateY(-50%); will-change: transform, opacity; }
 .morph-texts .mstep:nth-child(odd) { left: 2.5%; text-align: left; }
@@ -1346,7 +1346,7 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
 .mbk-glass { position: absolute; left: 9.7%; top: 3.1%; width: 80.6%; height: 88.8%; overflow: hidden; background: #000; z-index: 1; }
 /* the screen sits inside a thin black edge with a lit panel behind it, so a dark app still reads as a real display */
 .mbk-glass::before { content: ""; position: absolute; inset: 2.7% 1.9%; z-index: 0; background: #11172a; }
-.mbk-glass img { display: block; position: absolute; z-index: 1; inset: 2.7% 1.9%; width: 96.2%; height: 94.6%; object-fit: contain; object-position: center; mix-blend-mode: screen; border: 1px solid #1b1b20; }
-.mbk-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px), linear-gradient(115deg, rgba(255,255,255,.07) 0, rgba(255,255,255,0) 32%); box-shadow: inset 0 0 0 2px #000, inset 0 0 0 3px rgba(130,134,150,.5), inset 0 0 18px 4px rgba(0,0,0,.7); }
+.mbk-glass img { display: block; position: absolute; z-index: 1; inset: 2.7% 1.9%; width: 96.2%; height: 94.6%; object-fit: contain; object-position: center; mix-blend-mode: screen; border: 0; }
+.mbk-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px), linear-gradient(115deg, rgba(255,255,255,.07) 0, rgba(255,255,255,0) 32%); box-shadow: inset 0 0 0 3px #000, inset 0 0 18px 4px rgba(0,0,0,.7); }
 .mbk-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .feature-media .mbk { max-width: none; }
