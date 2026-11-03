@@ -222,7 +222,8 @@
     var sky = Array.prototype.slice.call(morph.querySelectorAll('.morph-sky i'));
     var N = steps.length || 1;
     var render = function () {
-      if (!track || window.innerWidth <= 860) return;
+      if (!track) return;
+      if (window.innerWidth <= 860) { for (var m = 0; m < shots.length; m++) { shots[m].style.transform = ''; shots[m].style.opacity = ''; } return; }
       var total = track.offsetHeight - window.innerHeight;
       var p = total > 0 ? Math.min(Math.max(-track.getBoundingClientRect().top / total, 0), 1) : 0;
       // Hold each step for most of its slot, then transition quickly to the next.
