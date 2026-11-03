@@ -261,25 +261,27 @@
     render();
   });
 
-  // Spiral galaxy behind a section: a pure function of scroll position, so it turns back when you scroll up.
-  var galaxies = Array.prototype.slice.call(document.querySelectorAll('.galaxy'));
-  if (galaxies.length && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
-    var gTick = false;
-    var spin = function () {
-      gTick = false;
-      var vh = window.innerHeight;
-      galaxies.forEach(function (g) {
-        var sec = g.closest('section') || g.parentElement, r = sec.getBoundingClientRect();
-        if (r.bottom < -200 || r.top > vh + 200) return;
-        var p = (vh - r.top) / (r.height + vh);
-        g.style.setProperty('--gx', (p * 220 - 60).toFixed(1) + 'deg');
-      });
+  // The pinned Overview: the screen stays, four statements swap around it, and the spiral galaxy turns with the scroll (back again when you scroll up).
+  Array.prototype.forEach.call(document.querySelectorAll('.spin'), function (spin) {
+    var track = spin.querySelector('.spin-track'), gal = spin.querySelector('.galaxy img');
+    var steps = Array.prototype.slice.call(spin.querySelectorAll('.ostep')), N = steps.length || 1;
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var queued = false;
+    var render = function () {
+      queued = false;
+      var vh = window.innerHeight, r = track.getBoundingClientRect(), wide = window.innerWidth > 860, p;
+      if (wide) { var total = track.offsetHeight - vh; p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0; }
+      else { p = Math.min(Math.max((vh - r.top) / (r.height + vh), 0), 1); }
+      if (gal && !still) gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg');
+      if (!wide) return;
+      var seg = p * N, idx = Math.min(Math.floor(seg), N - 1);
+      var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
+      var f = Math.min(idx + t, N - 1);
+      steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
     };
-    var onScroll = function () { if (!gTick) { gTick = true; window.requestAnimationFrame(spin); } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    spin();
-  }
+    var onScroll = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
+    window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
+  });
 
   // Views carousel: flip through interface screenshots.
   Array.prototype.forEach.call(document.querySelectorAll('[data-carousel]'), function (car) {

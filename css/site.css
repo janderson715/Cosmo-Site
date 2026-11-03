@@ -1353,21 +1353,6 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
 .mbk-frame { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .feature-media .mbk { max-width: none; }
 
-/* Spiral galaxy behind the main screen at the top. It turns with the scroll, like the shooting stars, and back when you scroll up. */
-.hero-stage > .galaxy { position: absolute; inset: -34% -22%; z-index: 0; pointer-events: none; }
-.hero-stage > .hero-shot { position: relative; z-index: 1; }
-.galaxy img { position: absolute; left: 50%; top: 50%; width: min(1700px, 100%); min-width: 560px; max-width: none; height: auto; opacity: .9; transform: translate(-50%, -50%) rotate(var(--gx, 0deg)); will-change: transform; -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 70%); mask-image: radial-gradient(circle, #000 50%, transparent 70%); }
-@media (max-width: 860px) { .hero-stage > .galaxy { inset: -20% -40%; } .galaxy img { min-width: 480px; opacity: .8; } }
-
-/* Tighter join between "what it is" and the Bot section: the two sections' big paddings added up to a huge empty band (Ray, 2026-11-03). */
-.section.intro { padding-bottom: clamp(20px, 2.5vw, 36px); }
-.section.intro + .section.dark { padding-top: clamp(28px, 3.5vw, 48px); }
-
-/* The hero screen is narrower than the stage so the galaxy behind it shows all round it. */
-.hero-stage > .hero-shot { max-width: min(860px, 84%); margin: 0 auto; }
-.hero-stage > .galaxy { inset: -40% -30%; }
-.galaxy img { opacity: 1; }
-@media (max-width: 860px) { .hero-stage > .hero-shot { max-width: 100%; } .hero-stage > .galaxy { inset: -25% -55%; } }
 
 
 /* Ask in plain language: a large avatar, the real bot window hovering at her bottom right, the larger chat page underneath with its buttons pointed out. */
@@ -1392,4 +1377,31 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
   .botduo .bigava { width: 210px; height: 210px; }
   .botduo .botwin { left: 120px; top: 150px; width: 240px; }
   .chatbig { grid-template-columns: 1fr; }
+}
+
+
+/* The Overview screen is pinned while you scroll. Four statements swap around it and the spiral galaxy behind it turns with the scroll (and back when you scroll up). */
+.spin { position: relative; background: transparent; }
+.spin-track { position: relative; height: 420vh; }
+.spin-stage { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; }
+.spin .galaxy { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.spin .galaxy img { position: absolute; left: 50%; top: 50%; width: min(1900px, 150vw); max-width: none; height: auto; opacity: 1; transform: translate(-50%, -50%) rotate(var(--gx, 0deg)); will-change: transform; -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 70%); mask-image: radial-gradient(circle, #000 50%, transparent 70%); }
+.spin-screen { position: relative; z-index: 1; width: min(55%, 1000px); margin: 0; }
+.spin-screen img { display: block; width: 100%; height: auto; background: #04071a; border: 1px solid var(--border-2); box-shadow: 0 40px 90px rgba(0, 0, 0, .6); }
+.spin-texts { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.spin-texts .ostep { position: absolute; top: 50%; width: min(19%, 290px); opacity: 0; transform: translateY(-50%); will-change: transform, opacity; }
+.spin-texts .ostep:nth-child(odd) { left: 2%; text-align: left; }
+.spin-texts .ostep:nth-child(even) { right: 2%; text-align: right; }
+.spin-texts .mno { display: block; font: 700 .8rem/1 var(--font); letter-spacing: .26em; color: var(--orange); }
+.spin-texts h3 { font-size: clamp(1.3rem, .9rem + 1.3vw, 2rem); line-height: 1.12; margin: 12px 0 0; color: var(--ink); }
+.spin-texts p { margin: 12px 0 0; font-size: clamp(.92rem, .88rem + .22vw, 1.05rem); line-height: 1.55; color: var(--body); }
+html:not(.js) .spin-track { height: auto; } html:not(.js) .spin-stage { position: static; height: auto; display: block; }
+html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep { position: static; opacity: 1; transform: none; width: auto; padding: 18px 24px; text-align: left; }
+@media (max-width: 860px) {
+  .spin-track { height: auto; }
+  .spin-stage { position: relative; height: auto; display: block; padding: 40px 16px 28px; overflow: hidden; }
+  .spin .galaxy img { width: 230vw; }
+  .spin-screen { width: 100%; }
+  .spin-texts { position: relative; inset: auto; margin-top: 24px; }
+  .spin-texts .ostep { position: static; opacity: 1 !important; transform: none !important; width: auto; text-align: left !important; padding: 20px 0; border-top: 1px solid var(--border); }
 }
