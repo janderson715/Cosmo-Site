@@ -102,6 +102,11 @@ The page fades sections in as you scroll, floats the hero laptop, draws a slow s
 
 The site loads nothing from other websites: no web fonts, no analytics, no trackers. It uses the computer's own system fonts. The only outside request is the contact form going to the site-forms Worker (Resend) when someone presses Send.
 
-## PDF documents (for downloading, not shown on the site)
+## Documents (links)
 
-`documents/` holds the latest C.O.S.M.O handbook and brochure as PDFs. Nothing on the website links to them; they are here so you can download the newest copy. When Ray rebuilds them, the files are replaced, so run `git pull` and take the PDFs from `documents/`.
+Click a link to open the PDF on GitHub, then use the download button there.
+
+- [C.O.S.M.O brochure](documents/Cosmo-Brochure.pdf)
+- [C.O.S.M.O handbook](documents/Cosmo-Handbook.pdf)
+
+To read them as web pages, open `documents/html/` in a browser. Nothing on the website links to the documents.
