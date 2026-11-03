@@ -101,3 +101,7 @@ The page fades sections in as you scroll, floats the hero laptop, draws a slow s
 ## Privacy
 
 The site loads nothing from other websites: no web fonts, no analytics, no trackers. It uses the computer's own system fonts. The only outside request is the contact form going to the site-forms Worker (Resend) when someone presses Send.
+
+## PDF documents (for downloading, not shown on the site)
+
+`documents/` holds the latest C.O.S.M.O handbook and brochure as PDFs. Nothing on the website links to them; they are here so you can download the newest copy. When Ray rebuilds them, the files are replaced, so run `git pull` and take the PDFs from `documents/`.
