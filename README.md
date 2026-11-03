@@ -102,11 +102,6 @@ The page fades sections in as you scroll, floats the hero laptop, draws a slow s
 
 The site loads nothing from other websites: no web fonts, no analytics, no trackers. It uses the computer's own system fonts. The only outside request is the contact form going to the site-forms Worker (Resend) when someone presses Send.
 
-## Documents (links)
+## Documents
 
-Click a link to open the PDF on GitHub, then use the download button there.
-
-- [C.O.S.M.O brochure](documents/Cosmo-Brochure.pdf)
-- [C.O.S.M.O handbook](documents/Cosmo-Handbook.pdf)
-
-To read them as web pages, open `documents/html/` in a browser. Nothing on the website links to the documents.
+The C.O.S.M.O PDFs are kept in this repository only, on the [`documents` branch](https://github.com/janderson715/Cosmo-Site/tree/documents). They are not part of the website and nothing on the site links to them.
