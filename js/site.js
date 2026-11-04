@@ -299,10 +299,10 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
     var cities = [], lights = [], links = [], n, k;
     var onTop = function (maxDeg) { var th = Math.acos(1 - rn() * (1 - Math.cos(maxDeg * Math.PI / 180))), ph = rn() * 6.2832; return [Math.sin(th) * Math.cos(ph), -Math.cos(th), Math.sin(th) * Math.sin(ph)]; };
     var jig = function (v, s) { var x = v[0] + gs() * s, y = v[1] + gs() * s, z = v[2] + gs() * s, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; };
-    for (n = 0; n < 760; n++) cities.push([onTop(46), rn() < .12]);
+    for (n = 0; n < 1800; n++) cities.push([onTop(28), rn() < .1]);
     cities.forEach(function (c) { var m = 3 + Math.floor(rn() * 7); for (k = 0; k < m; k++) lights.push([jig(c[0], .004), rn() < .25 || c[1] ? 1 : 0]); });
-    for (n = 0; n < 900; n++) lights.push([onTop(46), rn() < .2 ? 1 : 0]);
-    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai && x[0] < .006) links.push([ai, x[1], rn() < .2, rn()]); }); });
+    for (n = 0; n < 1500; n++) lights.push([onTop(28), rn() < .2 ? 1 : 0]);
+    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai && x[0] < .0012) links.push([ai, x[1], rn() < .2, rn()]); }); });
     // the tilted axis the globe turns about (leaning so the lights travel on a diagonal, and rise over the horizon)
     var AX = (function () { var x = .5, y = .22, z = .84, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; })();
     var fit = function () { var r = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
