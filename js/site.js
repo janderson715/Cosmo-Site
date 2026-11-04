@@ -279,7 +279,7 @@
       var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
       var f = Math.min(idx + t, S - 1);
       shots.forEach(function (s, k) { var d = k - f; s.style.transform = 'translateY(' + (d * 100).toFixed(2) + '%)'; s.style.opacity = Math.abs(d) < 1.0001 ? '1' : '0'; });
-      steps.forEach(function (s, k) { var dd = (k + 1) - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
+      steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
     };
     var onScroll = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
@@ -292,11 +292,12 @@
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var W = 0, H = 0, dpr = 1, running = false, raf = 0;
     var seed = 7; var rnd = function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-    var tints = [[58, 91, 255], [122, 92, 255], [79, 209, 255], [247, 147, 30]];
+    var tints = [[58, 91, 255], [160, 80, 255], [79, 209, 255], [255, 150, 40], [255, 70, 150], [40, 220, 190], [255, 90, 60]];
+    var armTints = [[0, 2, 5], [1, 4, 4], [3, 6, 3]];
     var sprites = tints.map(function (c) { var s = document.createElement('canvas'); s.width = s.height = 128; var g = s.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(' + c.join(',') + ',1)'); gr.addColorStop(.45, 'rgba(' + c.join(',') + ',.35)'); gr.addColorStop(1, 'rgba(' + c.join(',') + ',0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); return s; });
     var blobs = [], stars = [], i;
-    for (i = 0; i < 64; i++) blobs.push({ r: .06 + rnd() * .92, arm: Math.floor(rnd() * 3), sz: .12 + rnd() * .2, tint: rnd() < .55 ? 0 : rnd() < .6 ? 1 : 2, a: .05 + rnd() * .09, j: (rnd() - .5) * .5 });
-    for (i = 0; i < 1100; i++) { var rr = Math.pow(rnd(), .72); stars.push({ r: rr, arm: Math.floor(rnd() * 3), j: (rnd() - .5) * (.18 + rr * .35), s: rnd() < .08 ? 2.2 : rnd() < .3 ? 1.5 : 1, tw: .6 + rnd() * 2.4, ph: rnd() * 6.28, c: rnd() < .15 ? 'rgba(255,214,160,' : rnd() < .5 ? 'rgba(190,210,255,' : 'rgba(255,255,255,' }); }
+    for (i = 0; i < 78; i++) { var ar = Math.floor(rnd() * 3), pal = armTints[ar]; blobs.push({ r: .06 + rnd() * .92, arm: ar, sz: .12 + rnd() * .2, tint: pal[Math.floor(rnd() * 3)], a: .08 + rnd() * .13, j: (rnd() - .5) * .5 }); }
+    for (i = 0; i < 1100; i++) { var rr = Math.pow(rnd(), .72); stars.push({ r: rr, arm: Math.floor(rnd() * 3), j: (rnd() - .5) * (.18 + rr * .35), s: rnd() < .08 ? 2.2 : rnd() < .3 ? 1.5 : 1, tw: .6 + rnd() * 2.4, ph: rnd() * 6.28, c: null }); stars[i].c = stars[i].arm === 0 ? (rnd() < .5 ? 'rgba(170,205,255,' : 'rgba(255,255,255,') : stars[i].arm === 1 ? (rnd() < .6 ? 'rgba(255,170,225,' : 'rgba(215,180,255,') : (rnd() < .6 ? 'rgba(255,215,140,' : 'rgba(255,170,110,'); }
     var members = [ { f: .93, sp: .055, ph: 4.6, ar: .84 }, { f: .86, sp: -.07, ph: 5.9, ar: .8 }, { f: .92, sp: .06, ph: 2.9, ar: .8 }, { f: .8, sp: -.085, ph: 0.9, ar: .82 }, { f: .88, sp: .075, ph: 1.9, ar: .8 } ];
     var omega = function (r) { return .13 / (.22 + r); };
     var size = function () { var r = box.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
@@ -304,7 +305,7 @@
       raf = 0; var t = still ? 0 : now / 1000, cx = W / 2, cy = H / 2, Rx = W * .5, Ry = H * .5, k;
       ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
       for (k = 0; k < blobs.length; k++) { var b = blobs[k], ang = b.arm * 2.0944 + b.r * 3.2 + b.j + t * omega(b.r), bx = cx + Math.cos(ang) * b.r * Rx, by = cy + Math.sin(ang) * b.r * Ry, bs = b.sz * Math.min(W, H); ctx.globalAlpha = b.a; ctx.drawImage(sprites[b.tint], bx - bs, by - bs, bs * 2, bs * 2); }
-      ctx.globalAlpha = .55; ctx.drawImage(sprites[3], cx - W * .16, cy - H * .16, W * .32, H * .32); ctx.globalAlpha = .35; ctx.drawImage(sprites[2], cx - W * .3, cy - H * .3, W * .6, H * .6);
+      ctx.globalAlpha = .5; ctx.drawImage(sprites[6], cx - W * .24, cy - H * .24, W * .48, H * .48); ctx.globalAlpha = .6; ctx.drawImage(sprites[3], cx - W * .15, cy - H * .15, W * .3, H * .3); ctx.globalAlpha = .3; ctx.drawImage(sprites[4], cx - W * .34, cy - H * .34, W * .68, H * .68);
       for (k = 0; k < stars.length; k++) { var s = stars[k], a2 = s.arm * 2.0944 + s.r * 3.2 + s.j + t * omega(s.r), sx = cx + Math.cos(a2) * s.r * Rx, sy = cy + Math.sin(a2) * s.r * Ry; ctx.globalAlpha = 1; ctx.fillStyle = s.c + (.45 + .5 * Math.sin(t * s.tw + s.ph) * .5 + .25).toFixed(2) + ')'; ctx.fillRect(sx, sy, s.s, s.s); }
       ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
       for (k = 0; k < members.length; k++) {
