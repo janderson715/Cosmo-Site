@@ -296,6 +296,9 @@
     var CODE = '01 0x7F fn() => { return a & 1; } 10 :: 0xA3 if (x) { y = 0 } ;; 11 ';
     var OR = ['#f7931e', '#ffa63d', '#e8801a', '#ffb35c'], BL = '#4fd1ff';
     var R = 5, RK = []; for (var q = 0; q < 26; q++) RK.push(1.2 + .42 * q / 25); // one wide band, no gaps // one narrow ring just outside the planet
+    var nodes = [], links = [], sd = 7, rn = function () { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
+    for (var nn = 0; nn < 190; nn++) nodes.push([(rn() * 2 - 1) * 1.15, .42 + Math.pow(rn(), .7) * .58, rn() < .12 ? 1 : 0, rn() * 6.28, rn() < .1 ? 3 : 1.4]);
+    nodes.forEach(function (A, i) { var cand = []; nodes.forEach(function (B, k) { if (k === i) return; var dx = Math.cos(A[0]) * A[1] - Math.cos(B[0]) * B[1], dy = Math.sin(A[0]) * A[1] - Math.sin(B[0]) * B[1], d = Math.sqrt(dx * dx + dy * dy); if (d < .16) cand.push([d, k]); }); cand.sort(function (u, v) { return u[0] - v[0]; }); cand.slice(0, 2).forEach(function (c) { if (c[1] > i) links.push([i, c[1], A[2] || nodes[c[1]][2], (rn() - .5) * .05, (rn() - .5) * .05]); }); });
     var glyphs = []; // angle, radius, char, colour, track
     RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .1), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
     var logo = new Image(); logo.src = 'assets/img/cosmo-hex.svg'; var logoOk = false; logo.onload = function () { logoOk = true; queue(); };
@@ -321,8 +324,13 @@
       ctx.fillStyle = '#000208'; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
       var inn = ctx.createRadialGradient(x0, y0, rpx * .9, x0, y0, rpx); inn.addColorStop(0, 'rgba(20,110,230,0)'); inn.addColorStop(1, 'rgba(30,130,255,.45)'); ctx.fillStyle = inn; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
       var rim = ctx.createRadialGradient(x0, y0, rpx * .995, x0, y0, rpx * 1.14); rim.addColorStop(0, 'rgba(170,235,255,0)'); rim.addColorStop(.03, 'rgba(170,235,255,.95)'); rim.addColorStop(.1, 'rgba(70,170,255,.6)'); rim.addColorStop(.3, 'rgba(30,100,255,.22)'); rim.addColorStop(1, 'rgba(30,100,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(x0, y0, rpx * 1.14, 0, 6.2832); ctx.fill();
-      ctx.save(); ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.clip(); ctx.strokeStyle = 'rgba(111,220,255,0)'; ctx.lineWidth = 1;
-      for (var bb = -5; bb <= 5; bb++) { ctx.beginPath(); ctx.ellipse(x0, y0 + bb * rpx * .17, rpx * 1.3, rpx * (.06 + Math.abs(bb) * .012), 0, 0, 6.2832); ctx.stroke(); }
+      // faded cyberspace inside the planet: a loose web of glowing nodes and soft links that is brightest at the edge and fades into the dark
+      ctx.save(); ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.clip();
+      var pt = function (n) { var aa = n[0] + Math.sin(p * 5 + n[3]) * .012, rr = n[1] * (1 + Math.sin(p * 4 + n[3] * 2) * .006); return [x0 + Math.cos(aa) * rr * rpx, y0 + Math.sin(aa) * rr * rpx, rr]; };
+      var fade = function (rr) { var q = Math.min(1, Math.max(0, (rr - .45) / .55)); return q * q; };
+      ctx.lineWidth = 1; ctx.lineCap = 'round';
+      for (var li = 0; li < links.length; li++) { var L = links[li], A = pt(nodes[L[0]]), B = pt(nodes[L[1]]), fa = fade((A[2] + B[2]) / 2); if (fa < .02) continue; ctx.strokeStyle = 'rgba(' + (L[2] ? '255,160,60' : '90,190,255') + ',' + (fa * (L[2] ? .4 : .5)).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.quadraticCurveTo((A[0] + B[0]) / 2 + L[3] * rpx, (A[1] + B[1]) / 2 + L[4] * rpx, B[0], B[1]); ctx.stroke(); }
+      for (var ni = 0; ni < nodes.length; ni++) { var N = nodes[ni], P = pt(N), fn = fade(P[2]); if (fn < .02) continue; ctx.fillStyle = N[2] ? 'rgba(255,170,70,' + (Math.min(1, fn * 1.1)).toFixed(3) + ')' : 'rgba(130,215,255,' + (Math.min(1, fn * 1.2)).toFixed(3) + ')'; var sz = N[4] * (rpx > 400 ? 1 : .6); ctx.beginPath(); ctx.arc(P[0], P[1], sz, 0, 6.2832); ctx.fill(); if (N[4] > 2) { ctx.fillStyle = 'rgba(90,190,255,' + (fn * .12).toFixed(3) + ')'; ctx.beginPath(); ctx.arc(P[0], P[1], sz * 5, 0, 6.2832); ctx.fill(); } }
       ctx.restore();
       };
       var items = [], spin = p * 1.1;
