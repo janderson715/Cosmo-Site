@@ -299,6 +299,8 @@
     var nodes = [], links = [], sd = 7, rn = function () { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
     for (var nn = 0; nn < 190; nn++) nodes.push([(rn() * 2 - 1) * 1.15, .42 + Math.pow(rn(), .7) * .58, rn() < .12 ? 1 : 0, rn() * 6.28, rn() < .1 ? 3 : 1.4]);
     nodes.forEach(function (A, i) { var cand = []; nodes.forEach(function (B, k) { if (k === i) return; var dx = Math.cos(A[0]) * A[1] - Math.cos(B[0]) * B[1], dy = Math.sin(A[0]) * A[1] - Math.sin(B[0]) * B[1], d = Math.sqrt(dx * dx + dy * dy); if (d < .16) cand.push([d, k]); }); cand.sort(function (u, v) { return u[0] - v[0]; }); cand.slice(0, 2).forEach(function (c) { if (c[1] > i) links.push([i, c[1], A[2] || nodes[c[1]][2], (rn() - .5) * .05, (rn() - .5) * .05]); }); });
+    var sky = [], sk = 11, rs = function () { sk = (sk * 16807) % 2147483647; return (sk - 1) / 2147483646; };
+    for (var si = 0; si < 2600; si++) { var zz = .15 + Math.pow(rs(), 1.6) * .85; sky.push([rs(), rs(), zz, rs() < .08 ? 2 : 1, rs() * 6.28, ['255,255,255', '255,255,255', '190,215,255', '255,214,150', '160,225,255'][Math.floor(rs() * 5)]]); }
     var glyphs = []; // angle, radius, char, colour, track
     RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .1), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
     var logo = new Image(); logo.src = 'assets/img/cosmo-hex.svg'; var logoOk = false; logo.onload = function () { logoOk = true; queue(); };
@@ -316,6 +318,10 @@
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
       var blur = 0; // sharp from the first frame cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      // the sky behind the planet: many stars that drift slowly with the scroll, the near ones faster, and twinkle a little
+      var tw = window.performance ? window.performance.now() / 1000 : 0;
+      for (var s2 = 0; s2 < sky.length; s2++) { var S = sky[s2], sx = (((S[0] * W - p * S[2] * 220) % W) + W) % W, sy = (((S[1] * H + p * S[2] * 90) % H) + H) % H; ctx.fillStyle = 'rgba(' + S[5] + ',' + ((.4 + S[2] * .6) * (.75 + .25 * Math.sin(tw * 1.3 + S[4]))).toFixed(2) + ')'; ctx.fillRect(sx, sy, S[3] * (S[2] > .7 ? 1.4 : 1), S[3] * (S[2] > .7 ? 1.4 : 1)); }
+
       var proj = function (x, y, z) { var dx = x - C[0], dy = y - C[1], dz = z - C[2], zz = dy * f[1] + dz * f[2]; if (zz < .5) return null; var X = dx / zz * F, Y = (dy * u[1] + dz * u[2]) / zz * F; return [xc + X * cr + Y * sr, yc - (Y * cr - X * sr), zz]; };
       // the ring: tidy tracks of orange code, set along the curve like lines of text
       var drawPlanet = function () {
