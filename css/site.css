@@ -1603,3 +1603,16 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 @keyframes cardtw { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 @media (prefers-reduced-motion: reduce) { .agent-card::after, .agent-card .stars2 { animation: none; } }
 .agent-card .ac-code { margin-top: auto; } .agent-card p { margin-bottom: 16px; }
+
+/* Small art under each heading: the thing itself, in miniature (banners, a CAC card, a FIPS badge, the logos). */
+.mini { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 14px; min-height: 34px; }
+.mini .mt { display: grid; place-items: center; width: 36px; height: 36px; background: rgba(160, 190, 255, .07); border: 1px solid rgba(160, 190, 255, .22); }
+.mini .mt img { width: 22px; height: 22px; }
+.mini .cac { width: 52px; height: 33px; flex: none; filter: drop-shadow(0 0 6px rgba(79, 209, 255, .4)); }
+.mini .fipsb { width: 36px; height: 36px; flex: none; filter: drop-shadow(0 0 7px rgba(79, 209, 255, .5)); }
+.mini .ban { display: inline-block; padding: 5px 12px; font: 800 .66rem/1 var(--font); letter-spacing: .16em; color: #fff; }
+.mini .ban.u { background: #007a33; } .mini .ban.c { background: #502b85; }
+.mini .pm { font: 700 .72rem/1 var(--mono); color: #cfe1ff; letter-spacing: .06em; }
+.mini .ch { font-style: normal; display: inline-block; padding: 5px 9px; font: 700 .62rem/1 var(--font); letter-spacing: .12em; text-transform: uppercase; border: 1px solid rgba(160, 190, 255, .3); background: rgba(160, 190, 255, .06); color: #cfe1ff; white-space: nowrap; }
+.mini .ch.m { font-family: var(--mono); text-transform: none; letter-spacing: .02em; font-weight: 600; }
+.mini .ch.b { color: #6fdcff; border-color: rgba(79, 209, 255, .45); } .mini .ch.o { color: #ffb35c; border-color: rgba(247, 147, 30, .5); } .mini .ch.g { color: #6ee7b7; border-color: rgba(54, 211, 153, .5); } .mini .ch.r { color: #ff8a8f; border-color: rgba(255, 90, 95, .5); }
