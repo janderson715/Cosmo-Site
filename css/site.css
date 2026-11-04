@@ -1667,3 +1667,5 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 /* The Government section continues the Runs-anywhere section above it instead of starting over. */
 #runs { padding-bottom: clamp(24px, 3vw, 44px); }
 #government { padding-top: clamp(24px, 3vw, 44px); }
+
+.dfl p { max-width: 19em; }
