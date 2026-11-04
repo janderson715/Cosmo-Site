@@ -262,7 +262,7 @@
   });
 
   // The pinned Overview: the screen stays, its pictures slide past as the four statements swap (like the laptop below), and the spiral galaxy turns with the scroll (back again when you scroll up).
-  Array.prototype.forEach.call(document.querySelectorAll('.spin'), function (spin) {
+  Array.prototype.forEach.call(document.querySelectorAll('section.spin'), function (spin) {
     var track = spin.querySelector('.spin-track'), gal = spin.querySelector('.galaxy img');
     var shots = Array.prototype.slice.call(spin.querySelectorAll('.spin-glass img'));
     var steps = Array.prototype.slice.call(spin.querySelectorAll('.ostep')), S = shots.length || 1;
