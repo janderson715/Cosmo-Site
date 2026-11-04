@@ -295,7 +295,7 @@
     var sprite = function (ch, col) { var k = ch + col; if (spr[k]) return spr[k]; var s = document.createElement('canvas'); s.width = SP; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .86) + 'px ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.shadowColor = col; g.shadowBlur = 4; g.fillText(ch, SP / 2, SP / 2 + 1); spr[k] = s; return s; };
     var CODE = '01 0x7F fn() => { return a & 1; } 10 :: 0xA3 if (x) { y = 0 } ;; 11 ';
     var OR = ['#f7931e', '#ffa63d', '#e8801a', '#ffb35c'], BL = '#4fd1ff';
-    var R = 5, RK = []; for (var q = 0; q < 26; q++) RK.push(1.4 + .8 * q / 25); // one wide band, no gaps // one narrow ring just outside the planet
+    var R = 5, RK = []; for (var q = 0; q < 26; q++) RK.push(1.2 + .42 * q / 25); // one wide band, no gaps // one narrow ring just outside the planet
     var glyphs = []; // angle, radius, char, colour, track
     RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .1), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
     var logo = new Image(); logo.src = 'assets/img/cosmo-hex.svg'; var logoOk = false; logo.onload = function () { logoOk = true; queue(); };
@@ -308,8 +308,8 @@
       queued = false; if (!W) return;
       var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0;
       var e = p * p * (3 - 2 * p) * .3 + p * .7;
-      var F = H * 2.2, D = lerp(11.5, 6.6, e), el = lerp(13, 9, e) * Math.PI / 180, roll = -4 * Math.PI / 180;
-      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.42, .13, e) - rpx, yc = H * .55, cr = Math.cos(roll), sr = Math.sin(roll);
+      var F = H * 2.2, D = lerp(11.5, 6.6, e), el = lerp(11, 8, e) * Math.PI / 180, roll = 0 * Math.PI / 180;
+      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.38, .13, e) - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
       var blur = Math.max(0, 8 * (1 - Math.min(1, p / .5))); cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
