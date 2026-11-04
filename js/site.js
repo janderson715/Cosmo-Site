@@ -261,10 +261,11 @@
     render();
   });
 
-  // The pinned Overview: the screen stays, four statements swap around it, and the spiral galaxy turns with the scroll (back again when you scroll up).
+  // The pinned Overview: the screen stays, its pictures slide past as the four statements swap (like the laptop below), and the spiral galaxy turns with the scroll (back again when you scroll up).
   Array.prototype.forEach.call(document.querySelectorAll('.spin'), function (spin) {
     var track = spin.querySelector('.spin-track'), gal = spin.querySelector('.galaxy img');
-    var steps = Array.prototype.slice.call(spin.querySelectorAll('.ostep')), N = steps.length || 1;
+    var shots = Array.prototype.slice.call(spin.querySelectorAll('.spin-glass img'));
+    var steps = Array.prototype.slice.call(spin.querySelectorAll('.ostep')), S = shots.length || 1;
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var queued = false;
     var render = function () {
@@ -273,11 +274,12 @@
       if (wide) { var total = track.offsetHeight - vh; p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0; }
       else { p = Math.min(Math.max((vh - r.top) / (r.height + vh), 0), 1); }
       if (gal && !still) gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg');
-      if (!wide) return;
-      var seg = p * N, idx = Math.min(Math.floor(seg), N - 1);
+      if (!wide) { shots.forEach(function (s) { s.style.transform = ''; s.style.opacity = ''; }); return; }
+      var seg = p * S, idx = Math.min(Math.floor(seg), S - 1);
       var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
-      var f = Math.min(idx + t, N - 1);
-      steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
+      var f = Math.min(idx + t, S - 1);
+      shots.forEach(function (s, k) { var d = k - f; s.style.transform = 'translateY(' + (d * 100).toFixed(2) + '%)'; s.style.opacity = Math.abs(d) < 1.0001 ? '1' : '0'; });
+      steps.forEach(function (s, k) { var dd = (k + 1) - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
     };
     var onScroll = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();

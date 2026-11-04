@@ -1372,12 +1372,13 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
 
 /* The Overview screen is pinned while you scroll. Four statements swap around it and the spiral galaxy behind it turns with the scroll (and back when you scroll up). */
 .spin { position: relative; background: transparent; }
-.spin-track { position: relative; height: 400vh; }
+.spin-track { position: relative; height: 500vh; }
 .spin-stage { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; }
 .spin .galaxy { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .spin .galaxy img { position: absolute; left: 50%; top: 50%; width: min(1900px, 150vw); max-width: none; height: auto; opacity: 1; transform: translate(-50%, -50%) rotate(var(--gx, 0deg)); will-change: transform; -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 70%); mask-image: radial-gradient(circle, #000 50%, transparent 70%); }
 .spin-screen { position: relative; z-index: 1; width: min(49%, 920px); margin: 0; }
-.spin-screen img { display: block; width: 100%; height: auto; background: #04071a; border: 1px solid var(--border-2); box-shadow: 0 40px 90px rgba(0, 0, 0, .6); }
+.spin-glass { position: relative; width: 100%; aspect-ratio: 1760 / 1105; overflow: hidden; background: #04071a; border: 1px solid var(--border-2); box-shadow: 0 40px 90px rgba(0, 0, 0, .6); }
+.spin-glass img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; will-change: transform; }
 .spin-texts { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .spin-texts .ostep { position: absolute; top: 50%; width: min(21%, 320px); opacity: 0; transform: translateY(-50%); will-change: transform, opacity; }
 .spin-texts .ostep:nth-child(odd) { left: 2%; text-align: left; }
@@ -1392,6 +1393,7 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
   .spin-stage { position: relative; height: auto; display: block; padding: 40px 16px 28px; overflow: hidden; }
   .spin .galaxy img { width: 230vw; }
   .spin-screen { width: 100%; }
+  .spin-glass img ~ img { display: none; }
   .spin-texts { position: relative; inset: auto; margin-top: 24px; }
   .spin-texts .ostep { position: static; opacity: 1 !important; transform: none !important; width: auto; text-align: left !important; padding: 20px 0; border-top: 1px solid var(--border); }
 }
