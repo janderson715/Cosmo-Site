@@ -308,8 +308,8 @@
       queued = false; if (!W) return;
       var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0;
       var e = p * p * (3 - 2 * p) * .3 + p * .7;
-      var F = H * 2.2, D = lerp(11.5, 6.6, e), el = lerp(11, 8, e) * Math.PI / 180, roll = 0 * Math.PI / 180;
-      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.38, .13, e) - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
+      var F = H * 2.2, D = lerp(11.5, 9.4, e), el = lerp(11, 10, e) * Math.PI / 180, roll = 0 * Math.PI / 180;
+      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.3, .6, e) - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
       var blur = Math.max(0, 8 * (1 - Math.min(1, p / .5))); cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
@@ -329,10 +329,10 @@
       var rp = function (a, r) { return proj(Math.cos(a) * r, 0, Math.sin(a) * r); };
       for (var k = 0; k < glyphs.length; k++) {
         var g = glyphs[k], a = g[0] + spin * (g[4] % 2 ? -1 : 1), pr = rp(a, g[1]); if (!pr) continue;
-        var s = F / pr[2] * .1; if (s < 3 || pr[0] < -60 || pr[0] > W + 60 || pr[1] < -60 || pr[1] > H + 60) continue;
+        var s = F / pr[2] * .062; if (s < 2 || pr[0] < -60 || pr[0] > W + 60 || pr[1] < -60 || pr[1] > H + 60) continue;
         var p2 = rp(a + .01, g[1]); var rot = p2 ? Math.atan2(p2[1] - pr[1], p2[0] - pr[0]) : 0;
         var behind = pr[2] > D; // the far side of the ring, seen over the planet, is dimmer
-        items.push([pr[2], pr[0], pr[1], Math.min(s, 40), g[2] + g[3], behind ? .75 : 1, rot]);
+        items.push([pr[2], pr[0], pr[1], Math.min(s, 90), g[2] + g[3], behind ? .75 : 1, rot]);
       }
       items.sort(function (A, B) { return B[0] - A[0]; });
       var paint = function (it) {
