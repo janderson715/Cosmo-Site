@@ -285,6 +285,48 @@
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
   });
 
+  // Runs anywhere: flow lines drawn like Scope & Impact. Coloured curves leave each input row, bundle into the C.O.S.M.O server and fan out to each AI choice, with bright points travelling along them.
+  Array.prototype.forEach.call(document.querySelectorAll('.archx'), function (box) {
+    var svg = box.querySelector('.archx-flowlines'), cols = box.querySelectorAll('.archx-col'), core = box.querySelector('.archx-core');
+    if (!svg || cols.length < 2 || !core) return;
+    var NS = 'http://www.w3.org/2000/svg', LEFT = ['#ff6b8b', '#4fd1ff', '#ffd166', '#36d399'], RIGHT = ['#a78bfa', '#ff9ed0', '#4fd1ff', '#7ee0a8'];
+    var mk = function (n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; };
+    var draw = function () {
+      if (window.innerWidth <= 860) return;
+      var b = box.getBoundingClientRect(), W = b.width, H = b.height, cr = core.getBoundingClientRect(), id = 0;
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      svg.setAttribute('viewBox', '0 0 ' + W.toFixed(0) + ' ' + H.toFixed(0)); svg.removeAttribute('preserveAspectRatio');
+      var defs = mk('defs', {}), glow = mk('filter', { id: 'fxglow', x: '-20%', y: '-20%', width: '140%', height: '140%' }); glow.appendChild(mk('feGaussianBlur', { stdDeviation: '4' })); defs.appendChild(glow); svg.appendChild(defs);
+      var coreTop = cr.top - b.top, coreH = cr.height;
+      var side = function (col, items, colours, isLeft) {
+        var r = col.getBoundingClientRect();
+        for (var i = 0; i < items.length; i++) {
+          var it = items[i].querySelector('.archx-logos') || items[i], ir = it.getBoundingClientRect();
+          var y0 = ir.top - b.top + Math.min(ir.height, 60) / 2;
+          var x0 = (isLeft ? r.right : r.left) - b.left, x1 = (isLeft ? cr.left : cr.right) - b.left;
+          var y1 = coreTop + coreH * (0.2 + 0.1 * i + (isLeft ? 0 : .03)), mx = (x0 + x1) / 2;
+          var d = 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + ' C' + mx.toFixed(1) + ' ' + y0.toFixed(1) + ' ' + mx.toFixed(1) + ' ' + y1.toFixed(1) + ' ' + x1.toFixed(1) + ' ' + y1.toFixed(1);
+          var c = colours[i % colours.length], pid = 'fxp' + (id++);
+          svg.appendChild(mk('path', { d: d, fill: 'none', stroke: c, 'stroke-width': 10, 'stroke-opacity': .16, filter: 'url(#fxglow)' }));
+          svg.appendChild(mk('path', { d: d, fill: 'none', stroke: c, 'stroke-width': 3.2, 'stroke-opacity': .5, 'stroke-linecap': 'round' }));
+          svg.appendChild(mk('path', { d: d, id: pid, fill: 'none', stroke: c, 'stroke-width': 1.3, 'stroke-opacity': .95, 'stroke-linecap': 'round' }));
+          for (var n = 0; n < 3; n++) {
+            var dot = mk('circle', { r: n === 0 ? 3.4 : 2.4, fill: '#fff', 'class': 'fxdot' }), am = mk('animateMotion', { dur: (3.4 + i * .45 + n * .3).toFixed(2) + 's', begin: '-' + (n * 1.3 + i * .6).toFixed(2) + 's', repeatCount: 'indefinite', keyPoints: isLeft ? '0;1' : '1;0', keyTimes: '0;1', calcMode: 'linear' });
+            am.appendChild(mk('mpath', { href: '#' + pid })); dot.appendChild(am); svg.appendChild(dot);
+            svg.appendChild(mk('circle', { r: 7, fill: c, 'fill-opacity': .28, 'class': 'fxdot' })).appendChild(am.cloneNode(true));
+          }
+        }
+      };
+      side(cols[0], cols[0].querySelectorAll('.archx-item'), LEFT, true);
+      side(cols[cols.length - 1], cols[cols.length - 1].querySelectorAll('.archx-item'), RIGHT, false);
+      var tm = box.querySelector('.archx-flow');
+      if (tm) { var tr = tm.getBoundingClientRect(), x = tr.left - b.left + tr.width / 2, y0 = tr.top - b.top, y1 = tr.bottom - b.top, dd = 'M' + x.toFixed(1) + ' ' + y0.toFixed(1) + ' L' + x.toFixed(1) + ' ' + y1.toFixed(1); svg.appendChild(mk('path', { d: dd, fill: 'none', stroke: '#f7931e', 'stroke-width': 3, 'stroke-opacity': .7, 'stroke-linecap': 'round' })); }
+    };
+    draw();
+    if ('ResizeObserver' in window) new ResizeObserver(draw).observe(box); else window.addEventListener('resize', draw);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  });
+
   // The Constellation: a field of random stars across the whole section (behind the text), some drifting in loose groups, and the five AI agent stars among them.
   Array.prototype.forEach.call(document.querySelectorAll('.nebula'), function (box) {
     var cv = box.querySelector('canvas'), ctx = cv.getContext('2d'), mem = Array.prototype.slice.call(box.querySelectorAll('.neb-member'));
