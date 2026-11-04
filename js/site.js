@@ -273,7 +273,7 @@
       var vh = window.innerHeight, r = track.getBoundingClientRect(), wide = window.innerWidth > 860, p;
       if (wide) { var total = track.offsetHeight - vh; p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0; }
       else { p = Math.min(Math.max((vh - r.top) / (r.height + vh), 0), 1); }
-      if (gal && !still) gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg');
+      if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg'); gal.style.setProperty('--gs', (1 + p * 1.1).toFixed(3)); gal.style.setProperty('--gt', (p * 62).toFixed(1) + 'deg'); }
       if (!wide) { shots.forEach(function (s) { s.style.transform = ''; s.style.opacity = ''; }); return; }
       var seg = p * S, idx = Math.min(Math.floor(seg), S - 1);
       var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
