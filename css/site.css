@@ -1416,3 +1416,6 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .neb-member.chair .neb-ico { border-color: rgba(255, 190, 110, .75); box-shadow: 0 0 26px rgba(255, 170, 80, .6), inset 0 0 12px rgba(255, 170, 80, .3); color: #ffd9a8; }
 .neb-member.chair b { color: #ffb35c; }
 @media (max-width: 860px) { .neb-member { width: 38px; height: 38px; } .neb-ico svg { width: 20px; height: 20px; } .neb-member b { font-size: 15px; top: 44px; } .neb-member.up b { bottom: 44px; } .neb-file b { font-size: 12px; } }
+
+/* The star field fills the whole Constellation section, behind the text. */
+.section.dark > canvas.neb-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent); }
