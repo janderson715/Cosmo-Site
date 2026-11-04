@@ -268,43 +268,13 @@
     var steps = Array.prototype.slice.call(spin.querySelectorAll('.ostep')), S = shots.length || 1;
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var queued = false;
-    // the galaxy, as before but drawn crisp: the same spiral points as galaxy.svg, with the blurred blobs left out, drawn as sharp stars on a canvas so they stay clean when the galaxy turns, tilts and zooms
-    var onSpin = function () {}; var gdraw = null; var gbox = spin.querySelector('.galaxy'), gcv = gbox && gbox.querySelector('.gal-cv'), gctx = gcv && gcv.getContext && gcv.getContext('2d'), GW = 0, GH = 0, gd = 1, gpts = [], gbk = {};
-    if (gctx && window.fetch && window.DOMParser) {
-      var gimg = gbox.querySelector('img'), gsrc = gimg && gimg.getAttribute('src');
-      var gfit = function () { var q = gcv.getBoundingClientRect(); gd = Math.min(window.devicePixelRatio || 1, 2); GW = q.width; GH = q.height; gcv.width = Math.round(GW * gd); gcv.height = Math.round(GH * gd); };
-      if (gsrc) window.fetch(gsrc).then(function (r) { return r.text(); }).then(function (txt) {
-        var doc = new window.DOMParser().parseFromString(txt, 'image/svg+xml'), gs = doc.querySelectorAll('svg > g');
-        // the blurred groups (filter) are the foggy blobs: skip them; keep the small sharp stars of the plain group and the soft-edged mid stars
-        var gseed = 3, gr = function () { gseed = (gseed * 16807) % 2147483647; return (gseed - 1) / 2147483646; }, gg = function () { return Math.sqrt(-2 * Math.log(gr() + 1e-9)) * Math.cos(6.2832 * gr()); };
-        Array.prototype.forEach.call(gs, function (g) {
-          var f = g.getAttribute('filter') || '', blob = /b1|b2/.test(f);
-          Array.prototype.forEach.call(g.querySelectorAll('circle'), function (c) {
-            var hex = (c.getAttribute('fill') || '#fff').replace('#', ''); if (hex.length === 3) hex = hex.replace(/(.)/g, '$1$1');
-            var rgb = parseInt(hex.substr(0, 2), 16) + ',' + parseInt(hex.substr(2, 2), 16) + ',' + parseInt(hex.substr(4, 2), 16), cx0 = (+c.getAttribute('cx') - 600) / 600, cy0 = (+c.getAttribute('cy') - 600) / 600, r0 = +c.getAttribute('r'), op = +c.getAttribute('opacity') || 1;
-            if (!blob) { var k2 = rgb + ',' + Math.min(1, Math.round(op * 1.15 * 3) / 3 || .35).toFixed(2); (gbk[k2] || (gbk[k2] = [])).push([cx0, cy0, Math.max(1, r0 * 1.3)]); return; }
-            // a blurred blob becomes a little cluster of sharp stars, so the arms keep their body without any fog
-            var cnt = Math.round(r0 * (/b1/.test(f) ? 3.4 : 4)); for (var q = 0; q < cnt; q++) { var al = gr() < .4 ? .6 : gr() < .7 ? .85 : 1, key = rgb + ',' + al; (gbk[key] || (gbk[key] = [])).push([cx0 + gg() * (r0 / 600) * .6, cy0 + gg() * (r0 / 600) * .6, gr() < .1 ? 2.8 : gr() < .4 ? 2 : 1.4]); }
-          });
-        });
-        gdraw = function (p) {
-          if (!GW) gfit(); if (!GW) return;
-          gctx.setTransform(gd, 0, 0, gd, 0, 0); gctx.clearRect(0, 0, GW, GH);
-          var cx = GW / 2, cy = GH / 2, R = Math.min(1900, GW * 1.5) / 2 * (1 + p * 1.1), a = (p * 300 - 30) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), tl = p * 80 * Math.PI / 180, ct = Math.cos(tl);
-          var core = gctx.createRadialGradient(0, 0, 0, 0, 0, R * .17); core.addColorStop(0, 'rgba(255,244,214,.95)'); core.addColorStop(.18, 'rgba(255,184,92,.55)'); core.addColorStop(.6, 'rgba(106,125,255,.14)'); core.addColorStop(1, 'rgba(42,60,192,0)');
-          gctx.save(); gctx.translate(cx, cy); gctx.scale(1, ct); var body = gctx.createRadialGradient(0, 0, 0, 0, 0, R * .5); body.addColorStop(0, 'rgba(79,123,255,.2)'); body.addColorStop(.55, 'rgba(106,63,208,.07)'); body.addColorStop(1, 'rgba(0,0,0,0)'); gctx.fillStyle = body; gctx.fillRect(-R * .5, -R * .5, R, R); gctx.fillStyle = core; gctx.fillRect(-R * .17, -R * .17, R * .34, R * .34); gctx.restore();
-          for (var key in gbk) { var arr = gbk[key]; gctx.fillStyle = 'rgba(' + key + ')'; for (var n = 0; n < arr.length; n++) { var s = arr[n], x = s[0] * ca - s[1] * sa, y = (s[0] * sa + s[1] * ca) * ct, px = cx + x * R, py = cy + y * R; if (px < -3 || px > GW + 3 || py < -3 || py > GH + 3) continue; var sz = s[2] * (1 + p * .3); gctx.fillRect(px - sz / 2, py - sz / 2, sz, sz); } }
-        };
-        gbox.classList.add('cv-on'); window.addEventListener('resize', function () { gfit(); }); if (queued === false) onSpin();
-      }).catch(function () {});
-    }
+    var onSpin = function () {};
     var render = function () {
       queued = false;
       var vh = window.innerHeight, r = track.getBoundingClientRect(), wide = window.innerWidth > 860, p;
       if (wide) { var total = track.offsetHeight - vh; p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0; }
       else { p = Math.min(Math.max((vh - r.top) / (r.height + vh), 0), 1); }
-      if (gdraw) gdraw(still ? 0 : p);
-      if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg'); gal.style.setProperty('--gs', (1 + p * 1.1).toFixed(3)); gal.style.setProperty('--gt', (p * 80).toFixed(1) + 'deg'); }
+if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg'); gal.style.setProperty('--gs', (1 + p * 1.1).toFixed(3)); gal.style.setProperty('--gt', (p * 82).toFixed(1) + 'deg'); }
       if (!wide) { shots.forEach(function (s) { s.style.transform = ''; s.style.opacity = ''; }); return; }
       var seg = p * S, idx = Math.min(Math.floor(seg), S - 1);
       var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
@@ -313,7 +283,6 @@
       steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
     };
     var onScroll = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
-    onSpin = onScroll;
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
   });
 
@@ -325,8 +294,22 @@
     var W = 0, H = 0, dpr = 1, queued = false;
     var SP = 64, spr = {};
     var sprite = function (ch, col) { var k = ch + col; if (spr[k]) return spr[k]; var s = document.createElement('canvas'); s.width = SP; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .86) + 'px ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.shadowColor = col; g.shadowBlur = 6; g.fillText(ch, SP / 2, SP / 2 + 1); spr[k] = s; return s; };
-    var CODE = '01 0x7F fn() => { return a & 1; } 10 :: 0xA3 if (x) { y = 0 } ;; 11 ';
-    var OR = ['#f7931e', '#ffa63d', '#e8801a', '#ffb35c'], BL = '#4fd1ff';
+    var CODE_SRC = "// scan a sample and report what it does\nconst MAX_BYTES = 4096;\nasync function scanSample(path, rules) {\n  const bytes = await readFile(path, { length: MAX_BYTES });\n  const hash = sha256(bytes);            // fingerprint first, never run\n  const hits = [];\n  for (const rule of rules) {\n    const found = rule.pattern.test(bytes.toString(\"latin1\"));\n    if (found) hits.push({ id: rule.id, score: rule.weight * 10 });\n  }\n  // sort the strongest evidence to the top\n  hits.sort((a, b) => b.score - a.score);\n  return { path, hash, hits, verdict: hits.length > 2 ? \"suspicious\" : \"clean\" };\n}\n\nfunction lookupDomain(name, feeds) {\n  const key = name.toLowerCase().trim();\n  if (!feeds.has(key)) return null;      // unknown means no match\n  const entry = feeds.get(key);\n  return { name: key, seen: entry.count, first: entry.since };\n}\n\nconst queue = new Map();\nexport function enqueue(job) {\n  if (queue.size >= 500) throw new Error(\"queue full\");\n  queue.set(job.id, { ...job, state: \"waiting\", added: Date.now() });\n  return queue.size;\n}\n\nasync function approve(change, user) {\n  // a person approves every change\n  if (user.role !== \"analyst\") return false;\n  await audit.write({ who: user.name, what: change.id, ok: true });\n  return true;\n}\n";
+    var KW = /^(const|let|var|function|async|await|return|if|else|for|of|new|throw|export|import|from|true|false|null|try|catch)$/;
+    var CODE = '', CCOL = [];
+    (function () {
+      var C = { kw: '#ffa63d', fn: '#ffd08a', id: '#f7931e', pu: '#e8801a', st: '#4fd1ff', nu: '#a78bfa', cm: '#36d399' };
+      var s = CODE_SRC.replace(/\n/g, '    '), i = 0, w;
+      var put = function (str, col) { for (var q = 0; q < str.length; q++) { CODE += str.charAt(q); CCOL.push(col); } };
+      while (i < s.length) {
+        var ch = s.charAt(i), rest = s.slice(i);
+        if (rest.slice(0, 2) === '//') { var e = rest.indexOf('    '); e = e < 0 ? rest.length : e; put(rest.slice(0, e), C.cm); i += e; continue; }
+        if (ch === '"' || ch === "'") { var j2 = s.indexOf(ch, i + 1); j2 = j2 < 0 ? s.length - 1 : j2; put(s.slice(i, j2 + 1), C.st); i = j2 + 1; continue; }
+        if (/[0-9]/.test(ch)) { var m = rest.match(/^[0-9.]+/)[0]; put(m, C.nu); i += m.length; continue; }
+        if (/[A-Za-z_$]/.test(ch)) { w = rest.match(/^[A-Za-z_$][A-Za-z0-9_$]*/)[0]; put(w, KW.test(w) ? C.kw : rest.charAt(w.length) === '(' ? C.fn : C.id); i += w.length; continue; }
+        put(ch, ch === ' ' ? C.id : C.pu); i++;
+      }
+    })();
     var R = 5, RK = []; for (var q = 0; q < 26; q++) RK.push(1.2 + .42 * q / 25); // one wide band, no gaps // one narrow ring just outside the planet
     var nodes = [], links = [], sd = 7, rn = function () { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
     for (var nn = 0; nn < 190; nn++) nodes.push([(rn() * 2 - 1) * 1.15, .42 + Math.pow(rn(), .7) * .58, rn() < .12 ? 1 : 0, rn() * 6.28, rn() < .1 ? 3 : 1.4]);
@@ -334,7 +317,7 @@
     var sky = [], sk = 11, rs = function () { sk = (sk * 16807) % 2147483647; return (sk - 1) / 2147483646; };
     for (var si = 0; si < 2600; si++) { var zz = .15 + Math.pow(rs(), 1.6) * .85; sky.push([rs(), rs(), zz, rs() < .08 ? 2 : 1, rs() * 6.28, ['255,255,255', '255,255,255', '190,215,255', '255,214,150', '160,225,255'][Math.floor(rs() * 5)]]); }
     var glyphs = []; // angle, radius, char, colour, track
-    RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .1), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
+    RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .1), off = (ti * 131) % CODE.length; for (var i = 0; i < n; i++) { var ix = (i + off) % CODE.length, ch = CODE.charAt(ix); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, CCOL[ix], ti]); } });
     var logo = new Image(); logo.src = 'assets/img/cosmo-hex.svg'; var logoOk = false; logo.onload = function () { logoOk = true; queue(); };
     var fit = function () { var r0 = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r0.width; H = r0.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
     var sub = function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }, dot = function (a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; };

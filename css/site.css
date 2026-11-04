@@ -1876,6 +1876,3 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .spin-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px); box-shadow: inset 0 0 0 3px #000, inset 0 0 18px 4px rgba(0, 0, 0, .7); }
 @media (max-width: 860px) { .spin-screen { width: 100%; } }
 
-/* Overview galaxy: drawn star by star on a canvas, so it stays crisp when it zooms and tilts */
-.spin .galaxy .gal-cv { display: none; position: absolute; inset: 0; width: 100%; height: 100%; -webkit-mask-image: radial-gradient(ellipse at center, #000 52%, transparent 80%); mask-image: radial-gradient(ellipse at center, #000 52%, transparent 80%); }
-.spin .galaxy.cv-on .gal-cv { display: block; } .spin .galaxy.cv-on img { display: none; }
