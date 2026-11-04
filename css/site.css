@@ -1867,3 +1867,11 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 #views .morph-texts .mstep, #views .morph-texts .mstep:nth-child(odd), #views .morph-texts .mstep:nth-child(even) { top: max(50%, 270px); left: 3%; right: auto; text-align: left; width: min(17%, 270px); }
 #views .mstep h3 { font-size: clamp(1.5rem, 1rem + 1.4vw, 2.2rem); }
 #views .mstep p { font-size: clamp(.92rem, .86rem + .25vw, 1.08rem); }
+
+/* Overview: the pinned screens sit in the same laptop as the Screens section */
+.spin-screen { width: min(54%, 980px); aspect-ratio: 1208 / 700; }
+.spin-glass { position: absolute; left: 9.7%; top: 3.1%; width: 80.6%; height: 88.8%; aspect-ratio: auto; overflow: hidden; z-index: 1; background: #000; border: 0; box-shadow: none; }
+.spin-glass::before { content: ""; position: absolute; inset: 2.7% 1.9%; z-index: 0; background: #11172a; }
+.spin-glass img { z-index: 1; inset: 2.7% 1.9%; width: 96.2%; height: 94.6%; }
+.spin-glass::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 1.4%, #22252d 0 2.5px, transparent 3px); box-shadow: inset 0 0 0 3px #000, inset 0 0 18px 4px rgba(0, 0, 0, .7); }
+@media (max-width: 860px) { .spin-screen { width: 100%; } }
