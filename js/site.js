@@ -327,8 +327,8 @@
         ctx.strokeStyle = 'rgba(' + col + ',.22)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(mx, my); ctx.stroke();
         var pf = ((t * .32 + k * .2) % 1), p1 = Math.min(pf + .05, 1);
         ctx.strokeStyle = 'rgba(' + col + ',' + (.9 * Math.sin(pf * 3.14)).toFixed(2) + ')'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx + (mx - cx) * pf, cy + (my - cy) * pf); ctx.lineTo(cx + (mx - cx) * p1, cy + (my - cy) * p1); ctx.stroke();
-        var gr = ctx.createRadialGradient(mx, my, 0, mx, my, 70); gr.addColorStop(0, 'rgba(' + col + ',.4)'); gr.addColorStop(1, 'rgba(' + col + ',0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(mx, my, 70, 0, 6.2832); ctx.fill();
-        var sp = 66 + 8 * Math.sin(t * 1.3 + k * 2); ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(' + col + ',.7)'; ctx.beginPath(); ctx.moveTo(mx - sp, my); ctx.lineTo(mx + sp, my); ctx.moveTo(mx, my - sp); ctx.lineTo(mx, my + sp); ctx.stroke();
+        var gr = ctx.createRadialGradient(mx, my, 0, mx, my, 80); gr.addColorStop(0, 'rgba(' + col + ',.16)'); gr.addColorStop(1, 'rgba(' + col + ',0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(mx, my, 80, 0, 6.2832); ctx.fill();
+        
         if (mem[k]) { var half = mem[k].offsetWidth / 2; mem[k].style.transform = 'translate(' + (mx - half).toFixed(1) + 'px,' + (my - half).toFixed(1) + 'px)'; mem[k].classList.toggle('up', my < cy); }
       }
       if (running && !still) raf = window.requestAnimationFrame(frame);
