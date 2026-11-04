@@ -286,6 +286,46 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
   });
 
+
+  // Watch the bot work: a field of drifting stars and a turning Earth, both driven by the scroll (they reverse when you scroll up).
+  Array.prototype.forEach.call(document.querySelectorAll('#bot.morph'), function (sec) {
+    var cv = sec.querySelector('.bot-cv'), track = sec.querySelector('.morph-track'); if (!cv || !track) return;
+    var ctx = cv.getContext('2d'); if (!ctx) return;
+    var W = 0, H = 0, dpr = 1, queued = false, still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var sd = 21, rn = function () { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }, gs = function () { return Math.sqrt(-2 * Math.log(rn() + 1e-9)) * Math.cos(6.2832 * rn()); };
+    var sky = []; for (var i = 0; i < 2400; i++) { var z = .15 + Math.pow(rn(), 1.6) * .85; sky.push([rn(), rn() * .8, z, rn() < .08 ? 2 : 1, rn() * 6.28, ['255,255,255', '255,255,255', '190,215,255', '255,214,150', '160,225,255'][Math.floor(rn() * 5)]]); }
+    // cities on the Earth: clusters of lights, each as (angle around the planet, height above the surface in px)
+    var cities = [], lights = [], links = [], n, k, c0;
+    for (n = 0; n < 70; n++) cities.push([rn() * 6.2832, rn() * 150 + 10, rn() < .18]);
+    cities.forEach(function (c, ci) { var m = 14 + Math.floor(rn() * 22); for (k = 0; k < m; k++) lights.push([c[0] + gs() * .006, c[1] + gs() * 9, rn() < .3 ? 1 : 0, c[2] ? 1 : 0]); });
+    for (n = 0; n < 260; n++) lights.push([rn() * 6.2832, rn() * 190, rn() < .2 ? 1 : 0, 0]);
+    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.abs(a[0] - b[0]); d = Math.min(d, 6.2832 - d); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 2); near.forEach(function (x) { if (x[1] > ai) links.push([ai, x[1], rn() < .22]); }); });
+    var fit = function () { var r = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
+    var render = function () {
+      queued = false; if (!W) fit(); if (!W || !H) return;
+      var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0; if (still) p = .3;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      // the sky: many stars that drift with the scroll, near ones faster, with a little twinkle
+      var tw = window.performance ? window.performance.now() / 1000 : 0;
+      for (var s = 0; s < sky.length; s++) { var S = sky[s], sx = (((S[0] * W - p * S[2] * 320) % W) + W) % W, sy = (((S[1] * H + p * S[2] * 110) % (H * .8)) + H * .8) % (H * .8); ctx.fillStyle = 'rgba(' + S[5] + ',' + ((.35 + S[2] * .6) * (.75 + .25 * Math.sin(tw * 1.2 + S[4]))).toFixed(2) + ')'; var q = S[3] * (S[2] > .7 ? 1.4 : 1); ctx.fillRect(sx, sy, q, q); }
+      // the Earth: a huge dark sphere whose top edge curves across the bottom; it turns with the scroll
+      var Rp = W * 2.6, cx = W / 2, capH = H * .24, cy = H - capH + Rp, th = p * .7 + 1.5708 * 0;
+      var body = ctx.createRadialGradient(cx, cy, Rp * .93, cx, cy, Rp); body.addColorStop(0, '#02061a'); body.addColorStop(.9, '#040d2b'); body.addColorStop(1, '#0b2a6a'); ctx.fillStyle = body; ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 6.2832); ctx.fill();
+      var rim = ctx.createRadialGradient(cx, cy, Rp * .996, cx, cy, Rp * 1.012); rim.addColorStop(0, 'rgba(170,235,255,0)'); rim.addColorStop(.18, 'rgba(190,240,255,.95)'); rim.addColorStop(.5, 'rgba(60,160,255,.4)'); rim.addColorStop(1, 'rgba(47,107,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(cx, cy, Rp * 1.012, 0, 6.2832); ctx.fill();
+      var pos = function (ang, h) { var a = ang + th - 1.5708, r = Rp - h; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 6.2832); ctx.clip();
+      ctx.lineWidth = 1; ctx.setLineDash([3, 7]); ctx.lineDashOffset = -tw * 12;
+      links.forEach(function (L) { var A = cities[L[0]], B = cities[L[1]], a = pos(A[0], A[1]), b = pos(B[0], B[1]); if ((a[1] < -20 && b[1] < -20) || (a[1] > H + 40 && b[1] > H + 40) || (a[0] < -60 && b[0] < -60) || (a[0] > W + 60 && b[0] > W + 60)) return; var mid = pos((A[0] + B[0]) / 2 + (Math.abs(A[0] - B[0]) > 3.14 ? 3.1416 : 0), (A[1] + B[1]) / 2 + 26 + Math.abs(a[0] - b[0]) * .12); ctx.strokeStyle = L[2] ? 'rgba(255,179,92,.8)' : 'rgba(111,220,255,.7)'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.quadraticCurveTo(mid[0], mid[1], b[0], b[1]); ctx.stroke(); });
+      ctx.setLineDash([]);
+      for (var li = 0; li < lights.length; li++) { var Lg = lights[li], q2 = pos(Lg[0], Lg[1]); if (q2[0] < -4 || q2[0] > W + 4 || q2[1] < H * .6 || q2[1] > H + 4) continue; ctx.fillStyle = Lg[3] ? 'rgba(255,200,120,.95)' : Lg[2] ? 'rgba(255,200,120,.9)' : 'rgba(150,230,255,.9)'; ctx.fillRect(q2[0] - 1, q2[1] - 1, 2, 2); }
+      ctx.restore();
+    };
+    var queue = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
+    fit(); sec.classList.add('cv-bot'); fit(); render();
+    window.addEventListener('scroll', queue, { passive: true }); window.addEventListener('resize', function () { fit(); queue(); });
+    if (!still && 'IntersectionObserver' in window) { var on = false, loop = function () { if (!on) return; queue(); window.requestAnimationFrame(loop); }; new IntersectionObserver(function (es) { on = es[0].isIntersecting; if (on) loop(); }).observe(sec); }
+  });
+
   // Screens: flying closer and above the rings of a C.O.S.M.O-blue planet. The rings are tidy tracks of orange code, set like lines of text.
   // The whole scene is a function of scroll position (it reverses on scroll up) and comes into focus as you approach.
   Array.prototype.forEach.call(document.querySelectorAll('section.flysec'), function (sec) {
