@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#04071a">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/img/favicon.png" type="image/png">
-<link rel="stylesheet" href="css/site.css?v=20261106s">
+<link rel="stylesheet" href="css/site.css?v=20261106t">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -21,11 +21,11 @@
   <div class="wrap">
     <a class="brand" href="index.html" aria-label="C.O.S.M.O home"><img src="assets/img/cosmo-logo.png" width="360" height="123" alt="C.O.S.M.O, Bringing Order to Cyber Operations"></a>
     <nav class="nav" aria-label="Main">
-      <ul class="nav-links"><li><a href="#chatbot">Bot</a></li><li><a href="#ingest">Ingest</a></li><li><a href="#workflow">Workflow</a></li><li><a href="#views">Screens</a></li><li><a href="#government">Government</a></li><li><a href="#contact">Contact</a></li></ul>
+      <ul class="nav-links"><li><a href="#chatbot">Bot</a></li><li><a href="#runs">Ingest</a></li><li><a href="#workflow">Workflow</a></li><li><a href="#views">Screens</a></li><li><a href="#government">Government</a></li><li><a href="#contact">Contact</a></li></ul>
       <a class="btn btn-primary btn-sm" href="#contact">Request a demo</a>
       <details class="menu">
         <summary><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-menu"/></svg>Menu</summary>
-        <ul><li><a href="#chatbot">Bot</a></li><li><a href="#ingest">Ingest</a></li><li><a href="#workflow">Workflow</a></li><li><a href="#views">Screens</a></li><li><a href="#government">Government</a></li><li><a href="#security">Security</a></li><li><a href="#contact">Contact</a></li><li><a class="btn btn-primary" href="#contact">Request a demo</a></li></ul>
+        <ul><li><a href="#chatbot">Bot</a></li><li><a href="#runs">Ingest</a></li><li><a href="#workflow">Workflow</a></li><li><a href="#views">Screens</a></li><li><a href="#government">Government</a></li><li><a href="#security">Security</a></li><li><a href="#contact">Contact</a></li><li><a class="btn btn-primary" href="#contact">Request a demo</a></li></ul>
       </details>
     </nav>
   </div>
@@ -152,49 +152,6 @@
     </div>
   </div>
   <div class="wrap"><p class="caption center">Real C.O.S.M.O screens with fictional demo data. Without an AI model connected the bot still decides from the evidence and your rules.</p></div>
-</section>
-
-<section class="section dark alt ingest" data-tab="platform" id="ingest" aria-labelledby="ing-h">
-  <div class="wrap">
-    <div class="section-head center" data-reveal>
-      <span class="eyebrow">Bring your own data</span>
-      <h2 id="ing-h">Hook in what your sensors and tools already produce.</h2>
-      <p class="lead">C.O.S.M.O reads the formats a security team already has. Point it at a source once, or let it read on a schedule. Where you connect a log tool, it queries the data in place, so nothing is copied.</p>
-    </div>
-    <div class="ingest-grid">
-      <div class="ingest-group" data-reveal>
-        <h3><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg>Network &amp; security logs</h3>
-        <ul>
-          <li><b>Firewalls &amp; IPS</b><span>iptables, Fortinet, pfSense, Palo Alto, Cisco</span></li>
-          <li><b>Suricata / Snort</b><span>IDS alerts, EVE JSON</span></li>
-          <li><b>Zeek</b><span>conn, dns, http, ssl logs</span></li>
-          <li><b>Security tools (CEF, LEEF)</b><span>ArcSight, QRadar, Splunk</span></li>
-          <li><b>NetFlow / CSV / JSON</b><span>flow exports, custom logs</span></li>
-          <li><b>Syslog</b><span>servers, routers, switches</span></li>
-          <li><b>Web server logs</b><span>Apache, nginx, IIS</span></li>
-        </ul>
-      </div>
-      <div class="ingest-group" data-reveal style="--d:1">
-        <h3><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-file"/></svg>Documents &amp; reports</h3>
-        <ul>
-          <li><b>Upload documents</b><span>PDF, Word, PowerPoint, Excel, HTML, text</span></li>
-          <li><b>Watch a folder or share</b><span>mounted SMB / NFS / local path</span></li>
-          <li><b>Inspect a suspicious file</b><span>hashes, markers, indicators &mdash; never run</span></li>
-          <li><b>Mailbox</b><span>IMAP, phishing inbox, .eml files</span></li>
-          <li><b>Web pages</b><span>index a URL on a schedule</span></li>
-        </ul>
-      </div>
-      <div class="ingest-group" data-reveal style="--d:2">
-        <h3><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>Connect your log tools</h3>
-        <ul>
-          <li><b>Splunk, Elastic &amp; Sentinel</b><span>read-only search, results checked against intelligence</span></li>
-          <li><b>Threat intelligence</b><span>TAXII, MISP, STIX 2.1, RSS feeds</span></li>
-          <li><b>Scheduled collectors</b><span>any saved source, read on a schedule</span></li>
-        </ul>
-      </div>
-    </div>
-    <p class="ingest-note" data-reveal>Addresses, fingerprints and attacker methods are pulled out and highlighted on the way in &mdash; so anything an analyst can read becomes something C.O.S.M.O can work with.</p>
-  </div>
 </section>
 
 <section class="section dark alt" data-tab="home" id="compare" aria-labelledby="vs-h">
@@ -408,6 +365,7 @@
           <div class="archx-item"><span class="archx-logos"><i class="lt"><img src="assets/img/logos/color/paloalto.svg" alt="Palo Alto Networks"></i><i class="lt"><img src="assets/img/logos/color/cisco.svg" alt="Cisco"></i><i class="lt"><img src="assets/img/logos/color/fortinet.svg" alt="Fortinet"></i><i class="lt tx" title="Suricata"><span>Suricata</span></i><i class="lt tx" title="Zeek"><span>Zeek</span></i></span><div class="archx-txt"><strong>Firewalls &amp; IPS</strong><span>Syslog, CEF, Suricata, Zeek</span></div></div>
           <div class="archx-item"><span class="archx-logos"><i class="lt"><img src="assets/img/logos/color/splunk.svg" alt="Splunk"></i><i class="lt"><img src="assets/img/logos/color/elasticsearch.svg" alt="Elasticsearch"></i><i class="lt"><img src="assets/img/logos/color/azure.svg" alt="Microsoft Azure"></i><i class="lt"><img src="assets/img/logos/color/sqlserver.svg" alt="SQL databases"></i><i class="lt"><img src="assets/img/logos/color/awss3.svg" alt="Amazon S3"></i></span><div class="archx-txt"><strong>Logs &amp; your tools</strong><span>Splunk, Elasticsearch, SQL, S3, Azure</span></div></div>
           <div class="archx-item"><span class="archx-logos"><i class="lt"><img src="assets/img/logos/color/threatintel.svg" alt="Threat intelligence feeds"></i><i class="lt"><img src="assets/img/logos/color/rss.svg" alt="RSS"></i><i class="lt tx" title="MISP"><span>MISP</span></i><i class="lt tx" title="TAXII"><span>TAXII</span></i><i class="lt"><img src="assets/img/logos/color/stix.png" alt="STIX"></i></span><div class="archx-txt"><strong>Threat intelligence</strong><span>RSS, TAXII, MISP, STIX</span></div></div>
+          <div class="archx-item"><span class="archx-logos"><i class="lt tx"><span>PDF</span></i><i class="lt tx"><span>Word</span></i><i class="lt tx"><span>Mail</span></i></span><div class="archx-txt"><strong>Documents &amp; mail</strong><span>Reports, a watched folder, a phishing inbox</span></div></div>
           <div class="archx-item"><span class="archx-logos"><i class="lt"><img src="assets/img/logos/color/contentpack.svg" alt="Signed content pack on removable media"></i></span><div class="archx-txt"><strong>Signed content packs</strong><span>On removable media, when offline</span></div></div>
         </div>
         <div class="archx-core">
