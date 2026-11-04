@@ -285,38 +285,37 @@
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
   });
 
-  // The Constellation: a swirling star nebula. A spiral of stars turns around the file, and the five members drift on their own orbits.
+  // The Constellation: a swirling star nebula. A spiral of stars in all sorts of colours turns around the file, and the five AI members drift on their own orbits.
   Array.prototype.forEach.call(document.querySelectorAll('.nebula'), function (box) {
-    var cv = box.querySelector('canvas'), ctx = cv.getContext('2d'), names = Array.prototype.slice.call(box.querySelectorAll('.neb-name'));
+    var cv = box.querySelector('canvas'), ctx = cv.getContext('2d'), mem = Array.prototype.slice.call(box.querySelectorAll('.neb-member'));
     if (!ctx) return;
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var W = 0, H = 0, dpr = 1, running = false, raf = 0;
-    var seed = 7; var rnd = function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-    var tints = [[58, 91, 255], [140, 90, 230], [79, 190, 245], [235, 150, 70], [200, 110, 190], [70, 190, 180], [225, 120, 80]];
-    var armTints = [[0, 2, 5], [1, 4, 4], [3, 6, 3]];
-    var sprites = tints.map(function (c) { var s = document.createElement('canvas'); s.width = s.height = 128; var g = s.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(' + c.join(',') + ',1)'); gr.addColorStop(.45, 'rgba(' + c.join(',') + ',.35)'); gr.addColorStop(1, 'rgba(' + c.join(',') + ',0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); return s; });
-    var blobs = [], stars = [], i;
-    for (i = 0; i < 78; i++) { var ar = Math.floor(rnd() * 3), pal = armTints[ar]; blobs.push({ r: .06 + rnd() * .92, arm: ar, sz: .12 + rnd() * .2, tint: pal[Math.floor(rnd() * 3)], a: .035 + rnd() * .06, j: (rnd() - .5) * .5 }); }
-    for (i = 0; i < 1100; i++) { var rr = Math.pow(rnd(), .72); stars.push({ r: rr, arm: Math.floor(rnd() * 3), j: (rnd() - .5) * (.18 + rr * .35), s: rnd() < .08 ? 2.2 : rnd() < .3 ? 1.5 : 1, tw: .6 + rnd() * 2.4, ph: rnd() * 6.28, c: null }); stars[i].c = stars[i].arm === 0 ? (rnd() < .5 ? 'rgba(170,205,255,' : 'rgba(255,255,255,') : stars[i].arm === 1 ? (rnd() < .6 ? 'rgba(255,170,225,' : 'rgba(215,180,255,') : (rnd() < .6 ? 'rgba(255,215,140,' : 'rgba(255,170,110,'); }
-    var members = [ { f: .93, sp: .055, ph: 4.6, ar: .84 }, { f: .86, sp: -.07, ph: 5.9, ar: .8 }, { f: .92, sp: .06, ph: 2.9, ar: .8 }, { f: .8, sp: -.085, ph: 0.9, ar: .82 }, { f: .88, sp: .075, ph: 1.9, ar: .8 } ];
+    var seed = 11; var rnd = function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    var palette = ['255,255,255', '255,255,255', '255,255,255', '255,255,255', '190,215,255', '190,215,255', '255,214,150', '255,214,150', '255,170,200', '150,235,225', '200,175,255', '255,175,120'];
+    var haze = (function () { var s = document.createElement('canvas'); s.width = s.height = 256; var g = s.getContext('2d'), gr = g.createRadialGradient(128, 128, 0, 128, 128, 128); gr.addColorStop(0, 'rgba(150,170,255,.55)'); gr.addColorStop(.4, 'rgba(110,120,230,.18)'); gr.addColorStop(1, 'rgba(60,70,190,0)'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); return s; })();
+    var stars = [], i;
+    for (i = 0; i < 2600; i++) { var rr = Math.pow(rnd(), .75); stars.push({ r: rr, arm: Math.floor(rnd() * 3), j: (rnd() - .5) * (.16 + rr * .3), s: rnd() < .07 ? 3 : rnd() < .3 ? 2 : 1.4, tw: .6 + rnd() * 2.6, ph: rnd() * 6.28, c: palette[Math.floor(rnd() * palette.length)] }); }
+    var tint = ['255,179,92', '120,200,255', '190,150,255', '110,225,200', '255,150,190'];
+    var orbit = [ { f: .93, sp: .055, ph: 4.6, ar: .84 }, { f: .86, sp: -.07, ph: 5.9, ar: .8 }, { f: .92, sp: .06, ph: 2.9, ar: .8 }, { f: .8, sp: -.085, ph: 0.9, ar: .82 }, { f: .88, sp: .075, ph: 1.9, ar: .8 } ];
     var omega = function (r) { return .13 / (.22 + r); };
     var size = function () { var r = box.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
     var frame = function (now) {
       raf = 0; var t = still ? 0 : now / 1000, cx = W / 2, cy = H / 2, Rx = W * .44, Ry = H * .44, k;
       ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
-      for (k = 0; k < blobs.length; k++) { var b = blobs[k], ang = b.arm * 2.0944 + b.r * 3.2 + b.j + t * omega(b.r), bx = cx + Math.cos(ang) * b.r * Rx, by = cy + Math.sin(ang) * b.r * Ry, bs = b.sz * Math.min(W, H); ctx.globalAlpha = b.a; ctx.drawImage(sprites[b.tint], bx - bs, by - bs, bs * 2, bs * 2); }
-      ctx.globalAlpha = .16; ctx.drawImage(sprites[6], cx - W * .2, cy - H * .2, W * .4, H * .4); ctx.globalAlpha = .3; ctx.drawImage(sprites[3], cx - W * .12, cy - H * .12, W * .24, H * .24); ctx.globalAlpha = .22; ctx.drawImage(sprites[2], cx - W * .28, cy - H * .28, W * .56, H * .56);
-      for (k = 0; k < stars.length; k++) { var s = stars[k], a2 = s.arm * 2.0944 + s.r * 3.2 + s.j + t * omega(s.r), sx = cx + Math.cos(a2) * s.r * Rx, sy = cy + Math.sin(a2) * s.r * Ry; ctx.globalAlpha = 1; ctx.fillStyle = s.c + (.45 + .5 * Math.sin(t * s.tw + s.ph) * .5 + .25).toFixed(2) + ')'; ctx.fillRect(sx, sy, s.s, s.s); }
+      ctx.globalAlpha = .3; ctx.drawImage(haze, cx - W * .42, cy - H * .42, W * .84, H * .84);
+      ctx.globalAlpha = .34; ctx.drawImage(haze, cx - W * .14, cy - H * .14, W * .28, H * .28);
+      for (k = 0; k < stars.length; k++) { var s = stars[k], a2 = s.arm * 2.0944 + s.r * 3.2 + s.j + t * omega(s.r), sx = cx + Math.cos(a2) * s.r * Rx, sy = cy + Math.sin(a2) * s.r * Ry, al = .55 + .45 * (.5 + .5 * Math.sin(t * s.tw + s.ph)); ctx.fillStyle = 'rgba(' + s.c + ',' + Math.min(al, 1).toFixed(2) + ')'; ctx.fillRect(sx, sy, s.s, s.s); }
       ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
-      for (k = 0; k < members.length; k++) {
-        var m = members[k], ang2 = m.ph + t * m.sp, mx = cx + Math.cos(ang2) * m.f * Rx * .86, my = cy + Math.sin(ang2) * m.f * Ry * .8 * m.ar;
-        ctx.strokeStyle = 'rgba(79,209,255,.2)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(mx, my); ctx.stroke();
-        var pf = ((t * .32 + k * .2) % 1), p0 = pf, p1 = Math.min(pf + .05, 1);
-        ctx.strokeStyle = 'rgba(79,209,255,' + (.9 * Math.sin(pf * 3.14)).toFixed(2) + ')'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx + (mx - cx) * p0, cy + (my - cy) * p0); ctx.lineTo(cx + (mx - cx) * p1, cy + (my - cy) * p1); ctx.stroke();
-        var chair = k === 0, gr = ctx.createRadialGradient(mx, my, 0, mx, my, chair ? 38 : 30); gr.addColorStop(0, chair ? 'rgba(255,179,92,.75)' : 'rgba(79,209,255,.6)'); gr.addColorStop(1, 'rgba(79,209,255,0)');
-        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(mx, my, chair ? 38 : 30, 0, 6.2832); ctx.fill();
-        ctx.fillStyle = chair ? '#ffcf99' : '#fff'; ctx.beginPath(); ctx.arc(mx, my, chair ? 7 : 6, 0, 6.2832); ctx.fill();
-        if (names[k]) { var lw = names[k].offsetWidth, lh = names[k].offsetHeight, ly = my < cy ? my - lh - 14 : my + 12; names[k].style.transform = 'translate(' + (mx - lw / 2).toFixed(1) + 'px,' + ly.toFixed(1) + 'px)'; }
+      for (k = 0; k < orbit.length; k++) {
+        var m = orbit[k], ang = m.ph + t * m.sp, mx = cx + Math.cos(ang) * m.f * Rx * .9, my = cy + Math.sin(ang) * m.f * Ry * .85 * m.ar, col = tint[k];
+        ctx.strokeStyle = 'rgba(' + col + ',.22)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(mx, my); ctx.stroke();
+        var pf = ((t * .32 + k * .2) % 1), p1 = Math.min(pf + .05, 1);
+        ctx.strokeStyle = 'rgba(' + col + ',' + (.9 * Math.sin(pf * 3.14)).toFixed(2) + ')'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx + (mx - cx) * pf, cy + (my - cy) * pf); ctx.lineTo(cx + (mx - cx) * p1, cy + (my - cy) * p1); ctx.stroke();
+        // the star's own light: a glow with four long spikes, so each member reads as a star
+        var gr = ctx.createRadialGradient(mx, my, 0, mx, my, 46); gr.addColorStop(0, 'rgba(' + col + ',.5)'); gr.addColorStop(1, 'rgba(' + col + ',0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(mx, my, 46, 0, 6.2832); ctx.fill();
+        var sp = 34 + 6 * Math.sin(t * 1.3 + k * 2); ctx.lineCap = 'round'; ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(' + col + ',.7)'; ctx.beginPath(); ctx.moveTo(mx - sp, my); ctx.lineTo(mx + sp, my); ctx.moveTo(mx, my - sp); ctx.lineTo(mx, my + sp); ctx.stroke();
+        if (mem[k]) { var half = mem[k].offsetWidth / 2; mem[k].style.transform = 'translate(' + (mx - half).toFixed(1) + 'px,' + (my - half).toFixed(1) + 'px)'; mem[k].classList.toggle('up', my < cy); }
       }
       if (running && !still) raf = window.requestAnimationFrame(frame);
     };
