@@ -311,7 +311,7 @@
       queued = false; if (!W) return;
       var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0;
       var e = p * p * (3 - 2 * p) * .3 + p * .7;
-      var F = H * 2.2, D = lerp(16, 9.8, e), el = lerp(17, 4, e) * Math.PI / 180, roll = lerp(-9, 0, e) * Math.PI / 180;
+      var F = H * 2.2, D = lerp(17, 8.2, e), el = lerp(17, 4, e) * Math.PI / 180, roll = lerp(-9, 0, e) * Math.PI / 180;
       var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.3, .6, e) - rpx, yc = H * lerp(.6, .44, e), cr = Math.cos(roll), sr = Math.sin(roll);
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
       var blur = 0; // sharp from the first frame cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
