@@ -295,9 +295,9 @@
     var sprite = function (ch, col) { var k = ch + col; if (spr[k]) return spr[k]; var s = document.createElement('canvas'); s.width = SP; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .86) + 'px ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.shadowColor = col; g.shadowBlur = 4; g.fillText(ch, SP / 2, SP / 2 + 1); spr[k] = s; return s; };
     var CODE = '01 0x7F fn() => { return a & 1; } 10 :: 0xA3 if (x) { y = 0 } ;; 11 ';
     var OR = ['#f7931e', '#ffa63d', '#e8801a', '#ffb35c'], BL = '#4fd1ff';
-    var R = 5, RK = [1.10, 1.12, 1.14, 1.16, 1.18, 1.20, 1.22, 1.24, 1.26, 1.28, 1.30, 1.32, 1.34, 1.36]; // one narrow ring just outside the planet
+    var R = 5, RK = []; for (var q = 0; q < 26; q++) RK.push(1.4 + .8 * q / 25); // one wide band, no gaps // one narrow ring just outside the planet
     var glyphs = []; // angle, radius, char, colour, track
-    RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .085), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
+    RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .1), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
     var logo = new Image(); logo.src = 'assets/img/cosmo-hex.svg'; var logoOk = false; logo.onload = function () { logoOk = true; queue(); };
     var fit = function () { var r0 = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r0.width; H = r0.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
     var sub = function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }, dot = function (a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; };
@@ -308,8 +308,8 @@
       queued = false; if (!W) return;
       var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0;
       var e = p * p * (3 - 2 * p) * .3 + p * .7;
-      var F = H * 2.2, D = lerp(10.5, 7.4, e), el = lerp(30, 11, e) * Math.PI / 180, roll = -9 * Math.PI / 180;
-      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * .3 - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
+      var F = H * 2.2, D = lerp(11.5, 6.6, e), el = lerp(13, 9, e) * Math.PI / 180, roll = -4 * Math.PI / 180;
+      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.42, .13, e) - rpx, yc = H * .55, cr = Math.cos(roll), sr = Math.sin(roll);
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
       var blur = Math.max(0, 8 * (1 - Math.min(1, p / .5))); cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
@@ -318,9 +318,10 @@
       var drawPlanet = function () {
       // the planet: a C.O.S.M.O-blue sphere whose right limb is the only part in view
       var x0 = xc, y0 = yc;
-      var gr = ctx.createRadialGradient(x0 + rpx * .95, y0, 0, x0 + rpx * .95, y0, rpx * 1.7); gr.addColorStop(0, '#0b5aa6'); gr.addColorStop(.2, '#07407a'); gr.addColorStop(.5, '#020d22'); gr.addColorStop(1, '#000308'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
-      var rim = ctx.createRadialGradient(x0, y0, rpx * .985, x0, y0, rpx * 1.1); rim.addColorStop(0, 'rgba(150,235,255,0)'); rim.addColorStop(.02, 'rgba(150,235,255,.8)'); rim.addColorStop(.18, 'rgba(60,160,255,.35)'); rim.addColorStop(.5, 'rgba(47,107,255,.1)'); rim.addColorStop(1, 'rgba(47,107,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(x0, y0, rpx * 1.1, 0, 6.2832); ctx.fill();
-      ctx.save(); ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.clip(); ctx.strokeStyle = 'rgba(111,220,255,.07)'; ctx.lineWidth = 1;
+      ctx.fillStyle = '#000208'; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
+      var inn = ctx.createRadialGradient(x0, y0, rpx * .9, x0, y0, rpx); inn.addColorStop(0, 'rgba(20,110,230,0)'); inn.addColorStop(1, 'rgba(30,130,255,.45)'); ctx.fillStyle = inn; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
+      var rim = ctx.createRadialGradient(x0, y0, rpx * .995, x0, y0, rpx * 1.14); rim.addColorStop(0, 'rgba(170,235,255,0)'); rim.addColorStop(.03, 'rgba(170,235,255,.95)'); rim.addColorStop(.1, 'rgba(70,170,255,.6)'); rim.addColorStop(.3, 'rgba(30,100,255,.22)'); rim.addColorStop(1, 'rgba(30,100,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(x0, y0, rpx * 1.14, 0, 6.2832); ctx.fill();
+      ctx.save(); ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.clip(); ctx.strokeStyle = 'rgba(111,220,255,0)'; ctx.lineWidth = 1;
       for (var bb = -5; bb <= 5; bb++) { ctx.beginPath(); ctx.ellipse(x0, y0 + bb * rpx * .17, rpx * 1.3, rpx * (.06 + Math.abs(bb) * .012), 0, 0, 6.2832); ctx.stroke(); }
       ctx.restore();
       };
