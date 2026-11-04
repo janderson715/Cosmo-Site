@@ -1458,3 +1458,11 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* dark tiles, not white boxes: the logos sit on a faint tint with a thin edge */
 .archx-logos .lt, .archx-os .lt { background: rgba(160, 190, 255, .07); border: 1px solid rgba(160, 190, 255, .22); box-shadow: none; }
+
+/* rows with many tools: smaller tiles that wrap, and text tiles for tools without a logo file */
+.archx-logos { flex-wrap: wrap; }
+.archx-logos .lt { width: 42px; height: 42px; }
+.archx-logos .lt img { width: 24px; height: 24px; }
+.archx-logos .lt.tx { width: auto; min-width: 42px; padding: 0 8px; }
+.archx-logos .lt.tx span { font: 700 .62rem/1 var(--font); letter-spacing: .06em; text-transform: uppercase; color: #cfe1ff; white-space: nowrap; }
+.archx-logos .lt.tx:nth-of-type(n) { border-color: rgba(160, 190, 255, .3); }
