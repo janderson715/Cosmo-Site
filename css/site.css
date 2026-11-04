@@ -1455,3 +1455,6 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .archx-item { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px 0; min-height: 0; }
 .archx-logos { flex-wrap: wrap; }
 @media (max-width: 520px) { .archx-item { gap: 12px; } }
+
+/* dark tiles, not white boxes: the logos sit on a faint tint with a thin edge */
+.archx-logos .lt, .archx-os .lt { background: rgba(160, 190, 255, .07); border: 1px solid rgba(160, 190, 255, .22); box-shadow: none; }
