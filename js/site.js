@@ -301,7 +301,7 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
     for (n = 0; n < 760; n++) cities.push([onTop(46), rn() < .12]);
     cities.forEach(function (c) { var m = 3 + Math.floor(rn() * 7); for (k = 0; k < m; k++) lights.push([jig(c[0], .004), rn() < .25 || c[1] ? 1 : 0]); });
     for (n = 0; n < 900; n++) lights.push([onTop(46), rn() < .2 ? 1 : 0]);
-    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai) links.push([ai, x[1], rn() < .2, rn()]); }); });
+    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai && x[0] < .006) links.push([ai, x[1], rn() < .2, rn()]); }); });
     // the tilted axis the globe turns about (leaning so the lights travel on a diagonal, and rise over the horizon)
     var AX = (function () { var x = .5, y = .22, z = .84, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; })();
     var fit = function () { var r = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
@@ -322,12 +322,12 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
       // the network: hubs on the globe joined by glowing arcs, with data packets running along them
       var cp = cities.map(function (c) { return rot(c[0], 0); });
       var onScr = function (q) { return q[2] > 0 && q[0] > -80 && q[0] < W + 80 && q[1] > H * .6 - 20 && q[1] < H + 60; };
-      ctx.lineWidth = 1; ctx.setLineDash([2, 5]); ctx.lineDashOffset = -tw * 5;
+      ctx.lineWidth = 1; ctx.setLineDash([]);
       var vis = [];
-      links.forEach(function (L) { var a = cp[L[0]], b = cp[L[1]]; if (!onScr(a) && !onScr(b)) return; if (a[2] < 0 || b[2] < 0) return; var A = cities[L[0]][0], B = cities[L[1]][0], mv = [A[0] + B[0], A[1] + B[1], A[2] + B[2]], ml = Math.sqrt(mv[0] * mv[0] + mv[1] * mv[1] + mv[2] * mv[2]) || 1, dd = Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)), mid = rot([mv[0] / ml, mv[1] / ml, mv[2] / ml], Math.min(.03, dd / Rp * .6)); ctx.strokeStyle = L[2] ? 'rgba(255,179,92,.75)' : 'rgba(111,220,255,.6)'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.quadraticCurveTo(mid[0], mid[1], b[0], b[1]); ctx.stroke(); vis.push([a, mid, b, L[2], L[3]]); });
+      links.forEach(function (L) { var a = cp[L[0]], b = cp[L[1]]; if (!onScr(a) && !onScr(b)) return; if (a[2] < 0 || b[2] < 0) return; var A = cities[L[0]][0], B = cities[L[1]][0], mv = [A[0] + B[0], A[1] + B[1], A[2] + B[2]], ml = Math.sqrt(mv[0] * mv[0] + mv[1] * mv[1] + mv[2] * mv[2]) || 1, dd = Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)), mid = rot([mv[0] / ml, mv[1] / ml, mv[2] / ml], Math.min(.03, dd / Rp * .6)); ctx.strokeStyle = L[2] ? 'rgba(255,179,92,.55)' : 'rgba(111,220,255,.4)'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); vis.push([a, mid, b, L[2], L[3]]); });
       ctx.setLineDash([]);
       // data packets
-      vis.forEach(function (V, vi) { if (vi % 2) return; var t = ((tw * .22 + V[4]) % 1), u = 1 - t, px = u * u * V[0][0] + 2 * u * t * V[1][0] + t * t * V[2][0], py = u * u * V[0][1] + 2 * u * t * V[1][1] + t * t * V[2][1]; ctx.fillStyle = V[3] ? 'rgba(255,220,160,.95)' : 'rgba(210,245,255,.95)'; ctx.shadowColor = V[3] ? '#ffb35c' : '#4fd1ff'; ctx.shadowBlur = 8; ctx.fillRect(px - 1.5, py - 1.5, 3, 3); ctx.shadowBlur = 0; });
+      vis.forEach(function (V, vi) { if (vi % 2) return; var t = ((tw * .22 + V[4]) % 1), u = 1 - t, px = u * V[0][0] + t * V[2][0], py = u * V[0][1] + t * V[2][1]; ctx.fillStyle = V[3] ? 'rgba(255,220,160,.95)' : 'rgba(210,245,255,.95)'; ctx.shadowColor = V[3] ? '#ffb35c' : '#4fd1ff'; ctx.shadowBlur = 8; ctx.fillRect(px - 1.5, py - 1.5, 3, 3); ctx.shadowBlur = 0; });
       // small lights between the hubs
       for (var li = 0; li < lights.length; li++) { var Lg = lights[li], q2 = rot(Lg[0], 0); if (q2[2] < 0 || q2[0] < -4 || q2[0] > W + 4 || q2[1] < H * .6 || q2[1] > H + 4) continue; ctx.fillStyle = Lg[1] ? 'rgba(255,200,120,.8)' : 'rgba(150,230,255,.75)'; ctx.fillRect(q2[0] - .75, q2[1] - .75, 1.5, 1.5); }
       // hubs: a bright node with a soft halo (orange for the busiest)
