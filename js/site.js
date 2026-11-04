@@ -238,6 +238,18 @@
         shots[k].style.transform = 'translateY(' + (d * 100) + '%)';
         shots[k].style.opacity = Math.abs(d) < 1.0001 ? '1' : '0';
       }
+      // Shooting stars are a pure function of scroll position, so they reverse when you scroll back up. Each flies its own way across the sky.
+      sky.forEach(function (s, k) {
+        var sp = parseFloat(s.style.getPropertyValue('--s')) || 3, off = parseFloat(s.style.getPropertyValue('--o')) || 0;
+        var ANG = [28, 205, 152, 322, 95, 248, 15, 138, 292];
+        var ang = ANG[k % ANG.length] * Math.PI / 180;
+        var q = ((p * sp + off) % 1 + 1) % 1;
+        var a = q < .12 ? q / .12 : q > .8 ? (1 - q) / .2 : 1;
+        var dist = q * 80;
+        s.style.opacity = (a * .9).toFixed(3);
+        // the head (right end) points along the direction of travel
+        s.style.transform = 'translate(' + (Math.cos(ang) * dist).toFixed(1) + 'vw,' + (Math.sin(ang) * dist).toFixed(1) + 'vh) rotate(' + (ang * 180 / Math.PI).toFixed(0) + 'deg)';
+      });
       steps.forEach(function (s, j) {
         var dd = j - f;
         s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))';

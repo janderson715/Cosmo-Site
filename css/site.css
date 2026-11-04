@@ -1755,3 +1755,7 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .avaring i:nth-child(2) { animation-delay: 2.7s; border-color: rgba(111, 220, 255, .3); box-shadow: 0 0 10px rgba(79, 209, 255, .1); }
 .avaring i:nth-child(3) { animation-delay: 5.3s; border-color: rgba(111, 220, 255, .24); box-shadow: none; }
 @keyframes avcomm { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(2.1); opacity: 0; } }
+
+/* Shooting stars move with the scroll again (the original speed and amount); the time-based meteors are off. */
+.morph-sky i { width: var(--l); height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0), #fff 85%, #bfe9ff); border-radius: 2px; box-shadow: 0 0 10px 1px rgba(79, 209, 255, .65); transform-origin: 100% 50%; opacity: 0; animation: none; will-change: transform, opacity; }
+.morph-sky i::after { content: none; }
