@@ -1863,6 +1863,7 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .runs-gov .muted { color: #8a97bd; font-size: .86rem; }
 #runs { padding-bottom: var(--pad); }
 
-/* Screens: the call-outs sit top right and change with the scroll, clear of the rings and the planet */
-#views .morph-texts .mstep { top: 21%; left: auto; right: 3%; text-align: right; width: min(21%, 330px); }
-#views .morph-texts .mstep:nth-child(odd), #views .morph-texts .mstep:nth-child(even) { left: auto; right: 3%; text-align: right; }
+/* Screens: the call-outs sit on the black planet, left of the laptop, and change with the scroll */
+#views .morph-texts .mstep, #views .morph-texts .mstep:nth-child(odd), #views .morph-texts .mstep:nth-child(even) { top: 50%; left: 3%; right: auto; text-align: left; width: min(17%, 270px); }
+#views .mstep h3 { font-size: clamp(1.5rem, 1rem + 1.4vw, 2.2rem); }
+#views .mstep p { font-size: clamp(.92rem, .86rem + .25vw, 1.08rem); }
