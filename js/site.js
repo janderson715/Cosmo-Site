@@ -275,9 +275,9 @@
       if (gal && !still) gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg');
       if (!wide) return;
       var seg = p * N, idx = Math.min(Math.floor(seg), N - 1);
-      var t = (seg - idx - 0.8) / 0.2; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
+      var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
       var f = Math.min(idx + t, N - 1);
-      steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 56).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 2.2).toFixed(3); });
+      steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
     };
     var onScroll = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();

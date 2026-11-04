@@ -1372,7 +1372,7 @@ html:not(.js) .caro-slide { position: relative; opacity: 1; visibility: visible;
 
 /* The Overview screen is pinned while you scroll. Four statements swap around it and the spiral galaxy behind it turns with the scroll (and back when you scroll up). */
 .spin { position: relative; background: transparent; }
-.spin-track { position: relative; height: 720vh; }
+.spin-track { position: relative; height: 400vh; }
 .spin-stage { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; }
 .spin .galaxy { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .spin .galaxy img { position: absolute; left: 50%; top: 50%; width: min(1900px, 150vw); max-width: none; height: auto; opacity: 1; transform: translate(-50%, -50%) rotate(var(--gx, 0deg)); will-change: transform; -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 70%); mask-image: radial-gradient(circle, #000 50%, transparent 70%); }
