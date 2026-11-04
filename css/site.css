@@ -1669,3 +1669,10 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 #government { padding-top: clamp(24px, 3vw, 44px); }
 
 .dfl p { max-width: 19em; }
+
+/* More cyber galaxy: gas haze, circuit traces, drifting code, a pulse and an orbiting satellite on every node, comet trails on the particles. */
+.dfsvg .dfc { font: 600 10px ui-monospace, Menlo, monospace; fill: #6fdcff; opacity: .35; letter-spacing: .08em; animation: dfdrift 9s ease-in-out infinite; }
+@keyframes dfdrift { 0%, 100% { opacity: .12; transform: translateY(0); } 50% { opacity: .5; transform: translateY(-5px); } }
+.dfsvg .dfp { transform-box: fill-box; transform-origin: center; animation: dfpulse 3.6s ease-out infinite; }
+@keyframes dfpulse { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(1.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dfsvg .dfc, .dfsvg .dfp { animation: none; } .dfsvg animateTransform { display: none; } }
