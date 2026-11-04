@@ -268,12 +268,43 @@
     var steps = Array.prototype.slice.call(spin.querySelectorAll('.ostep')), S = shots.length || 1;
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var queued = false;
+    // the galaxy, as before but drawn crisp: the same spiral points as galaxy.svg, with the blurred blobs left out, drawn as sharp stars on a canvas so they stay clean when the galaxy turns, tilts and zooms
+    var onSpin = function () {}; var gdraw = null; var gbox = spin.querySelector('.galaxy'), gcv = gbox && gbox.querySelector('.gal-cv'), gctx = gcv && gcv.getContext && gcv.getContext('2d'), GW = 0, GH = 0, gd = 1, gpts = [], gbk = {};
+    if (gctx && window.fetch && window.DOMParser) {
+      var gimg = gbox.querySelector('img'), gsrc = gimg && gimg.getAttribute('src');
+      var gfit = function () { var q = gcv.getBoundingClientRect(); gd = Math.min(window.devicePixelRatio || 1, 2); GW = q.width; GH = q.height; gcv.width = Math.round(GW * gd); gcv.height = Math.round(GH * gd); };
+      if (gsrc) window.fetch(gsrc).then(function (r) { return r.text(); }).then(function (txt) {
+        var doc = new window.DOMParser().parseFromString(txt, 'image/svg+xml'), gs = doc.querySelectorAll('svg > g');
+        // the blurred groups (filter) are the foggy blobs: skip them; keep the small sharp stars of the plain group and the soft-edged mid stars
+        var gseed = 3, gr = function () { gseed = (gseed * 16807) % 2147483647; return (gseed - 1) / 2147483646; }, gg = function () { return Math.sqrt(-2 * Math.log(gr() + 1e-9)) * Math.cos(6.2832 * gr()); };
+        Array.prototype.forEach.call(gs, function (g) {
+          var f = g.getAttribute('filter') || '', blob = /b1|b2/.test(f);
+          Array.prototype.forEach.call(g.querySelectorAll('circle'), function (c) {
+            var hex = (c.getAttribute('fill') || '#fff').replace('#', ''); if (hex.length === 3) hex = hex.replace(/(.)/g, '$1$1');
+            var rgb = parseInt(hex.substr(0, 2), 16) + ',' + parseInt(hex.substr(2, 2), 16) + ',' + parseInt(hex.substr(4, 2), 16), cx0 = (+c.getAttribute('cx') - 600) / 600, cy0 = (+c.getAttribute('cy') - 600) / 600, r0 = +c.getAttribute('r'), op = +c.getAttribute('opacity') || 1;
+            if (!blob) { var k2 = rgb + ',' + Math.min(1, Math.round(op * 1.15 * 3) / 3 || .35).toFixed(2); (gbk[k2] || (gbk[k2] = [])).push([cx0, cy0, Math.max(1, r0 * 1.3)]); return; }
+            // a blurred blob becomes a little cluster of sharp stars, so the arms keep their body without any fog
+            var cnt = Math.round(r0 * (/b1/.test(f) ? 3.4 : 4)); for (var q = 0; q < cnt; q++) { var al = gr() < .4 ? .6 : gr() < .7 ? .85 : 1, key = rgb + ',' + al; (gbk[key] || (gbk[key] = [])).push([cx0 + gg() * (r0 / 600) * .6, cy0 + gg() * (r0 / 600) * .6, gr() < .1 ? 2.8 : gr() < .4 ? 2 : 1.4]); }
+          });
+        });
+        gdraw = function (p) {
+          if (!GW) gfit(); if (!GW) return;
+          gctx.setTransform(gd, 0, 0, gd, 0, 0); gctx.clearRect(0, 0, GW, GH);
+          var cx = GW / 2, cy = GH / 2, R = Math.min(1900, GW * 1.5) / 2 * (1 + p * 1.1), a = (p * 300 - 30) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), tl = p * 80 * Math.PI / 180, ct = Math.cos(tl);
+          var core = gctx.createRadialGradient(0, 0, 0, 0, 0, R * .17); core.addColorStop(0, 'rgba(255,244,214,.95)'); core.addColorStop(.18, 'rgba(255,184,92,.55)'); core.addColorStop(.6, 'rgba(106,125,255,.14)'); core.addColorStop(1, 'rgba(42,60,192,0)');
+          gctx.save(); gctx.translate(cx, cy); gctx.scale(1, ct); var body = gctx.createRadialGradient(0, 0, 0, 0, 0, R * .5); body.addColorStop(0, 'rgba(79,123,255,.2)'); body.addColorStop(.55, 'rgba(106,63,208,.07)'); body.addColorStop(1, 'rgba(0,0,0,0)'); gctx.fillStyle = body; gctx.fillRect(-R * .5, -R * .5, R, R); gctx.fillStyle = core; gctx.fillRect(-R * .17, -R * .17, R * .34, R * .34); gctx.restore();
+          for (var key in gbk) { var arr = gbk[key]; gctx.fillStyle = 'rgba(' + key + ')'; for (var n = 0; n < arr.length; n++) { var s = arr[n], x = s[0] * ca - s[1] * sa, y = (s[0] * sa + s[1] * ca) * ct, px = cx + x * R, py = cy + y * R; if (px < -3 || px > GW + 3 || py < -3 || py > GH + 3) continue; var sz = s[2] * (1 + p * .3); gctx.fillRect(px - sz / 2, py - sz / 2, sz, sz); } }
+        };
+        gbox.classList.add('cv-on'); window.addEventListener('resize', function () { gfit(); }); if (queued === false) onSpin();
+      }).catch(function () {});
+    }
     var render = function () {
       queued = false;
       var vh = window.innerHeight, r = track.getBoundingClientRect(), wide = window.innerWidth > 860, p;
       if (wide) { var total = track.offsetHeight - vh; p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0; }
       else { p = Math.min(Math.max((vh - r.top) / (r.height + vh), 0), 1); }
-      if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg'); gal.style.setProperty('--gs', (1 + p * 1.1).toFixed(3)); gal.style.setProperty('--gt', (p * 62).toFixed(1) + 'deg'); }
+      if (gdraw) gdraw(still ? 0 : p);
+      if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + 'deg'); gal.style.setProperty('--gs', (1 + p * 1.1).toFixed(3)); gal.style.setProperty('--gt', (p * 80).toFixed(1) + 'deg'); }
       if (!wide) { shots.forEach(function (s) { s.style.transform = ''; s.style.opacity = ''; }); return; }
       var seg = p * S, idx = Math.min(Math.floor(seg), S - 1);
       var t = (seg - idx - 0.55) / 0.45; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
@@ -282,6 +313,7 @@
       steps.forEach(function (s, k) { var dd = k - f; s.style.transform = 'translateY(calc(-50% + ' + (dd * 64).toFixed(1) + 'px))'; s.style.opacity = Math.max(0, 1 - Math.abs(dd) * 1.3).toFixed(3); });
     };
     var onScroll = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
+    onSpin = onScroll;
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
   });
 
