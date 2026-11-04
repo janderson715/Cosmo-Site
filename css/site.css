@@ -1404,7 +1404,7 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* The Constellation: a swirling star nebula. The stars turn around the file and the five members drift on their own orbits (js/site.js, canvas). */
 .nebula { position: relative; width: 100%; aspect-ratio: 600 / 470; }
-.nebula .neb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-mask-image: radial-gradient(ellipse at center, #000 56%, transparent 76%); mask-image: radial-gradient(ellipse at center, #000 56%, transparent 76%); }
+.nebula .neb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-mask-image: radial-gradient(ellipse closest-side at center, #000 50%, transparent 98%); mask-image: radial-gradient(ellipse closest-side at center, #000 50%, transparent 98%); }
 .neb-file { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 12px 22px; text-align: center; background: #0e1640; border: 1.5px solid #f7931e; box-shadow: 0 0 40px rgba(247, 147, 30, .25); }
 .neb-file b { display: block; color: #fff; font: 600 14px var(--mono); white-space: nowrap; }
 .neb-file span { display: block; margin-top: 4px; color: #b9c5e6; font: 400 12px var(--font); }
