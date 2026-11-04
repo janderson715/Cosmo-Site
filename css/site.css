@@ -1759,3 +1759,8 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 /* Shooting stars move with the scroll again (the original speed and amount); the time-based meteors are off. */
 .morph-sky i { width: var(--l); height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0), #fff 85%, #bfe9ff); border-radius: 2px; box-shadow: 0 0 10px 1px rgba(79, 209, 255, .65); transform-origin: 100% 50%; opacity: 0; animation: none; will-change: transform, opacity; }
 .morph-sky i::after { content: none; }
+
+/* Section intros read as a balanced statement, not a paragraph with a lonely last line. */
+.section-head .lead, .section-head p { text-wrap: balance; }
+#chatbot .section-head .lead { position: relative; max-width: 30em; margin-left: auto; margin-right: auto; padding: 26px 18px 0; font-size: clamp(1.12rem, 1rem + .5vw, 1.4rem); line-height: 1.6; color: #dbe5ff; text-wrap: balance; }
+#chatbot .section-head .lead::before { content: "\201C"; position: absolute; left: 50%; top: -14px; transform: translateX(-50%); font: 700 64px/1 Georgia, 'Times New Roman', serif; color: #f7931e; text-shadow: 0 0 24px rgba(247, 147, 30, .45); }
