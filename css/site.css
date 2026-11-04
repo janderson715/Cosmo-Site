@@ -1892,3 +1892,28 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 @media (prefers-reduced-motion: reduce) { .pre-c .g-nd { animation: none; transform: rotate(46deg); } .pre-l i { animation: none; background: #36d399; box-shadow: 0 0 10px #36d399; } .pre-c em { animation: none; opacity: 1; } .pre-sc::after { animation: none; display: none; } }
 @media (max-width: 760px) { .pre-row { grid-template-columns: 1fr 1fr; row-gap: 18px; } }
 @media (max-width: 440px) { .pre-row { grid-template-columns: 1fr; } }
+
+/* Security: a padlock that locks as you scroll. Electrons circle it and stop at each step; the shackle drops closed at the end. */
+.padlock { max-width: 1000px; margin: clamp(16px, 2.4vw, 28px) auto 0; position: relative; }
+.pl-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.pl-orb, .pl-orb2 { fill: none; stroke: rgba(111, 220, 255, .16); stroke-width: 1; stroke-dasharray: 3 7; }
+.pl-prog { fill: none; stroke: #f7931e; stroke-width: 2; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: .8; transform: rotate(180deg); transform-origin: 500px 190px; }
+.pl-n polygon { fill: #070c2c; stroke: var(--c); stroke-width: 2; opacity: .45; transition: opacity .3s, filter .3s; }
+.pl-n text { fill: #fff; font: 800 15px var(--font); text-anchor: middle; opacity: .55; transition: opacity .3s; }
+.pl-n.on polygon { opacity: 1; filter: drop-shadow(0 0 10px var(--c)); } .pl-n.on text { opacity: 1; }
+.pl-sh { fill: none; stroke: #9fb4e8; stroke-width: 10; stroke-linecap: butt; stroke-linejoin: miter; transition: stroke .4s; }
+.pl-bd { fill: #0b1240; stroke: #6fdcff; stroke-width: 3; transition: stroke .4s, filter .4s; }
+.pl-kh { fill: #6fdcff; transition: fill .4s; }
+.padlock[data-step="0"] .pl-bd { stroke: #ff6b6f; filter: drop-shadow(0 0 14px rgba(255, 107, 111, .6)); } .padlock[data-step="0"] .pl-kh { fill: #ff6b6f; }
+.padlock[data-step="1"] .pl-bd { stroke: #4fd1ff; filter: drop-shadow(0 0 14px rgba(79, 209, 255, .6)); } .padlock[data-step="1"] .pl-kh { fill: #4fd1ff; }
+.padlock[data-step="2"] .pl-bd { stroke: #a78bfa; filter: drop-shadow(0 0 14px rgba(167, 139, 250, .6)); } .padlock[data-step="2"] .pl-kh { fill: #a78bfa; }
+.padlock[data-step="3"] .pl-bd { stroke: #36d399; filter: drop-shadow(0 0 16px rgba(54, 211, 153, .7)); } .padlock[data-step="3"] .pl-kh { fill: #36d399; } .padlock[data-step="3"] .pl-sh { stroke: #36d399; }
+.pl-e circle { fill: #f7931e; filter: drop-shadow(0 0 6px #f7931e); }
+.pl-e circle:nth-child(n+4) { fill: #6fdcff; filter: drop-shadow(0 0 6px #6fdcff); }
+.pl-state { position: relative; min-height: 64px; text-align: center; margin-top: -6px; }
+.pl-s { position: absolute; left: 0; right: 0; top: 0; opacity: 0; transition: opacity .35s; }
+.pl-s.on { opacity: 1; }
+.pl-s b { display: block; font: 700 .68rem/1 var(--mono); letter-spacing: .22em; text-transform: uppercase; color: #7fd8ff; margin-bottom: 8px; }
+.pl-s strong { display: block; color: #fff; font-size: 1.12rem; font-weight: 600; line-height: 1.35; }
+html:not(.js) .pl-s, .no-motion .pl-s { position: static; opacity: 1; margin-bottom: 10px; }
+@media (max-width: 640px) { .pl-s strong { font-size: 1rem; } .pl-state { min-height: 84px; } }
