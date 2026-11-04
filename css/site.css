@@ -1796,3 +1796,7 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* Shooting stars in the C.O.S.M.O orange. */
 .morph-sky i { background: linear-gradient(90deg, rgba(247, 147, 30, 0), rgba(247, 147, 30, .75) 70%, #ffe0b0); box-shadow: 0 0 10px 1px rgba(247, 147, 30, .6); }
+
+/* The work-order picture is a real dark-theme PDF render, so the image filter is off. */
+.order-card .sheet img { filter: none; }
+.order-card .sheet::after { background: linear-gradient(180deg, rgba(47, 107, 255, .1), transparent 40%); }
