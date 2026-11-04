@@ -358,33 +358,6 @@
   });
 
 
-  // Security padlock: scroll sets the step. Electrons circle the lock, the amber track fills, and the shackle drops closed on the last step.
-  Array.prototype.forEach.call(document.querySelectorAll('.padlock'), function (box) {
-    var svg = box.querySelector('.pl-svg'), el = svg.querySelectorAll('.pl-e circle'), nodes = svg.querySelectorAll('.pl-n'), sh = svg.querySelector('.pl-sh'), prog = svg.querySelector('.pl-prog'), states = box.querySelectorAll('.pl-s');
-    var TH = [200, 240, 300, 340], still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches, queued = false;
-    var onOrb = function (rx, ry, rot, a) { var x = Math.cos(a) * rx, y = Math.sin(a) * ry, c = Math.cos(rot), s = Math.sin(rot); return [500 + x * c - y * s, 190 + x * s + y * c]; };
-    var render = function () {
-      queued = false; var vh = window.innerHeight, r = box.getBoundingClientRect();
-      var p = still ? 1 : Math.min(1, Math.max(0, (vh * .85 - r.top) / (vh * .55)));
-      var k = Math.min(3, Math.floor(p * 4 - .0001 + (p >= 1 ? 0 : 0))); if (p <= 0) k = 0;
-      box.setAttribute('data-step', k);
-      Array.prototype.forEach.call(nodes, function (n, i) { n.classList.toggle('on', i <= k); });
-      Array.prototype.forEach.call(states, function (s, i) { s.classList.toggle('on', i === k); });
-      // the electrons gather at the active step and circle it, the way they circle the lock
-      var tgt = TH[k] * Math.PI / 180, ph = p * 6.2832 * 3;
-      for (var i = 0; i < el.length; i++) {
-        var pos;
-        if (i < 3) { var a = tgt + Math.sin(ph + i * 2.1) * .55 + (i - 1) * .12; pos = onOrb(340, 105, 0, a); }
-        else { var b = ph * 1.3 + i * 3.1; pos = onOrb(300, 92, -22 * Math.PI / 180, b); }
-        el[i].setAttribute('cx', pos[0].toFixed(1)); el[i].setAttribute('cy', pos[1].toFixed(1));
-      }
-      prog.style.strokeDashoffset = (100 - Math.min(1, p) * 40).toFixed(1);
-      sh.setAttribute('transform', 'translate(0,' + (-(1 - Math.min(1, Math.max(0, (p - .72) / .28))) * 26).toFixed(1) + ')');
-    };
-    var queue = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
-    window.addEventListener('scroll', queue, { passive: true }); window.addEventListener('resize', queue); render();
-  });
-
   // The work order writes itself out, a few characters at a time, the way a model streams its answer. Plain text is in the page, so it reads without script.
   Array.prototype.forEach.call(document.querySelectorAll('.wo-gen'), function (box) {
     var card = box.closest('.order-card'), cur = box.querySelector('.wo-cur'), parts = Array.prototype.slice.call(box.querySelectorAll('.gen'));
