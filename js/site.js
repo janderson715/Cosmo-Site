@@ -291,8 +291,8 @@
     var cv = sec.querySelector('canvas.fly-space'), track = sec.querySelector('.morph-track'); if (!cv || !track) return;
     var ctx = cv.getContext('2d'); if (!ctx) return;
     var W = 0, H = 0, dpr = 1, queued = false;
-    var SP = 30, spr = {};
-    var sprite = function (ch, col) { var k = ch + col; if (spr[k]) return spr[k]; var s = document.createElement('canvas'); s.width = SP; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .86) + 'px ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.shadowColor = col; g.shadowBlur = 4; g.fillText(ch, SP / 2, SP / 2 + 1); spr[k] = s; return s; };
+    var SP = 64, spr = {};
+    var sprite = function (ch, col) { var k = ch + col; if (spr[k]) return spr[k]; var s = document.createElement('canvas'); s.width = SP; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .86) + 'px ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.shadowColor = col; g.shadowBlur = 6; g.fillText(ch, SP / 2, SP / 2 + 1); spr[k] = s; return s; };
     var CODE = '01 0x7F fn() => { return a & 1; } 10 :: 0xA3 if (x) { y = 0 } ;; 11 ';
     var OR = ['#f7931e', '#ffa63d', '#e8801a', '#ffb35c'], BL = '#4fd1ff';
     var R = 5, RK = []; for (var q = 0; q < 26; q++) RK.push(1.2 + .42 * q / 25); // one wide band, no gaps // one narrow ring just outside the planet
@@ -311,8 +311,8 @@
       queued = false; if (!W) return;
       var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0;
       var e = p * p * (3 - 2 * p) * .3 + p * .7;
-      var F = H * 2.2, D = lerp(11.5, 9.4, e), el = lerp(11, 10, e) * Math.PI / 180, roll = 0 * Math.PI / 180;
-      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.3, .6, e) - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
+      var F = H * 2.2, D = lerp(11.5, 9.8, e), el = lerp(17, 4, e) * Math.PI / 180, roll = lerp(-9, 0, e) * Math.PI / 180;
+      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.3, .6, e) - rpx, yc = H * lerp(.6, .44, e), cr = Math.cos(roll), sr = Math.sin(roll);
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
       var blur = 0; // sharp from the first frame cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
