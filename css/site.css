@@ -1893,3 +1893,4 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
   #views .fly-space { height: 100%; }
 }
 @media (max-width: 860px) { #views .morph-texts { position: relative; z-index: 3; background: linear-gradient(180deg, rgba(4,7,26,.82), rgba(4,7,26,.9)); border-radius: 12px; padding: 4px 18px; margin-top: 8px; } #views .morph-texts .mstep:first-child { border-top: 0; } }
+@media (max-width: 420px) { .botduo .botwin { left: auto !important; right: 0; width: min(240px, 66vw) !important; } }
