@@ -245,10 +245,10 @@
         var ang = ANG[k % ANG.length] * Math.PI / 180;
         var idle = (window.performance ? window.performance.now() / 150000 : 0) * sp * .5, q = ((p * sp + off + idle) % 1 + 1) % 1; // keeps drifting slowly on its own, and the scroll speeds it up
         var a = q < .12 ? q / .12 : q > .8 ? (1 - q) / .2 : 1;
-        var dist = q * 80;
+        var dist = q * Math.hypot(window.innerWidth, window.innerHeight) * .62;
         s.style.opacity = (a * .9).toFixed(3);
         // the head (right end) points along the direction of travel
-        s.style.transform = 'translate(' + (Math.cos(ang) * dist).toFixed(1) + 'vw,' + (Math.sin(ang) * dist).toFixed(1) + 'vh) rotate(' + (ang * 180 / Math.PI).toFixed(0) + 'deg)';
+        s.style.transform = 'rotate(' + (ang * 180 / Math.PI).toFixed(0) + 'deg) translate3d(' + dist.toFixed(1) + 'px, 0, 0)'; // travels exactly along its own length, so a slow star never wobbles sideways
       });
       steps.forEach(function (s, j) {
         var dd = j - f;
