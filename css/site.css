@@ -1852,3 +1852,13 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .order-card .files li { transition: opacity .6s ease, transform .6s ease; }
 .order-card.writing .files li, .order-card.writing .pnote { opacity: 0; transform: translateY(6px); }
 @media (prefers-reduced-motion: reduce) { .wo-cur { animation: none; } }
+
+/* Government mode, folded into the Runs-anywhere section: a faint optional marker in the diagram and a short text block. */
+.archx-gov { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; align-items: center; margin-top: 12px; padding: 7px 9px; border: 1px dashed rgba(247, 147, 30, .45); }
+.archx-gov b { flex: 0 0 100%; text-align: center; font: 700 .6rem/1 var(--font); letter-spacing: .14em; text-transform: uppercase; color: #ffb35c; margin-bottom: 3px; }
+.archx-gov i { font-style: normal; font: 600 .58rem/1 var(--font); letter-spacing: .06em; padding: 4px 6px; border: 1px solid rgba(160, 190, 255, .25); color: #cfe1ff; white-space: nowrap; }
+.runs-gov { max-width: 760px; margin: clamp(28px, 4vw, 48px) auto 0; text-align: center; }
+.runs-gov h3 { margin: 0 0 10px; color: #fff; font-size: 1.3rem; }
+.runs-gov p { margin: 0 0 8px; color: #b9c5e6; font-size: 1.02rem; line-height: 1.6; text-wrap: balance; }
+.runs-gov .muted { color: #8a97bd; font-size: .86rem; }
+#runs { padding-bottom: var(--pad); }

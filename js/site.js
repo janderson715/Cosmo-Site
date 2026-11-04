@@ -285,24 +285,21 @@
     window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); render();
   });
 
-  // Screens: flying over the rings of a planet made of code, toward a C.O.S.M.O planet. Pure function of scroll position (reverses on scroll up).
+  // Screens: flying closer and above the rings of a C.O.S.M.O-blue planet. The rings are tidy tracks of orange code, set like lines of text.
+  // The whole scene is a function of scroll position (it reverses on scroll up) and comes into focus as you approach.
   Array.prototype.forEach.call(document.querySelectorAll('section.flysec'), function (sec) {
     var cv = sec.querySelector('canvas.fly-space'), track = sec.querySelector('.morph-track'); if (!cv || !track) return;
     var ctx = cv.getContext('2d'); if (!ctx) return;
     var W = 0, H = 0, dpr = 1, queued = false;
-    var seed = 5; var rnd = function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-    var CH = ['0', '1', '{', '}', '<', '>', '/', '=', ';', '#', '0x', '&&', 'fn', '::', '//', '[]'];
-    var COL = ['#f7931e', '#ffb35c', '#ff8a2a', '#4fd1ff', '#6fa8ff', '#2f6bff'];
-    var spr = {}; var SP = 28;
-    CH.forEach(function (c) { COL.forEach(function (k) { var s = document.createElement('canvas'); s.width = SP * 2; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .8) + 'px ui-monospace, Menlo, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = k; g.shadowColor = k; g.shadowBlur = 5; g.fillText(c, SP, SP / 2 + 1); spr[c + k] = s; }); });
+    var SP = 30, spr = {};
+    var sprite = function (ch, col) { var k = ch + col; if (spr[k]) return spr[k]; var s = document.createElement('canvas'); s.width = SP; s.height = SP; var g = s.getContext('2d'); g.font = '700 ' + (SP * .86) + 'px ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = col; g.shadowColor = col; g.shadowBlur = 4; g.fillText(ch, SP / 2, SP / 2 + 1); spr[k] = s; return s; };
+    var CODE = '01 0x7F fn() => { return a & 1; } 10 :: 0xA3 if (x) { y = 0 } ;; 11 ';
+    var OR = ['#f7931e', '#ffa63d', '#e8801a', '#ffb35c'], BL = '#4fd1ff';
+    var R = 5, RK = [1.13, 1.16, 1.19, 1.22, 1.25, 1.28, 1.31, 1.34]; // one narrow ring just outside the planet
+    var glyphs = []; // angle, radius, char, colour, track
+    RK.forEach(function (k, ti) { var r = R * k, n = Math.floor(6.2832 * r / .17), off = (ti * 9) % CODE.length; for (var i = 0; i < n; i++) { var ch = CODE.charAt((i + off) % CODE.length); if (ch === ' ') continue; glyphs.push([i / n * 6.2832, r, ch, (i % 29 === 7 ? BL : OR[ti % 4]), ti]); } });
     var logo = new Image(); logo.src = 'assets/img/cosmo-hex.svg'; var logoOk = false; logo.onload = function () { logoOk = true; queue(); };
-    var P = []; // x, y, z, glyph, colour, size, kind (0 star, 1 ring, 2 saturn, 3 cosmo)
-    var SAT = [-3.9, 0, 0], SR = 2.3, CMO = [3.6, -.2, 23], CR = 3.3, i, a, r, rad, lat, lon;
-    for (i = 0; i < 380; i++) { a = rnd() * 6.2832; var b = Math.acos(2 * rnd() - 1); P.push([Math.sin(b) * Math.cos(a) * 90, Math.cos(b) * 90, Math.sin(b) * Math.sin(a) * 90 + 10, CH[(rnd() * CH.length) | 0], COL[(rnd() * COL.length) | 0], .5 + rnd() * .5, 0]); }
-    for (i = 0; i < 4200; i++) { rad = 3.1 + Math.pow(rnd(), .8) * 3.6; if (rad > 4.25 && rad < 4.55) continue; a = rnd() * 6.2832; var inner = rad < 4.4; P.push([SAT[0] + Math.cos(a) * rad, (rnd() - .5) * .2, SAT[2] + Math.sin(a) * rad, CH[(rnd() * CH.length) | 0], COL[inner ? 3 + ((rnd() * 3) | 0) : ((rnd() * 6) | 0)], .55 + rnd() * .6, 1]); }
-    for (i = 0; i < 1300; i++) { lat = Math.asin(2 * rnd() - 1); lon = rnd() * 6.2832; var band = Math.sin(lat * 5) > 0; P.push([Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon), CH[(rnd() * CH.length) | 0], band ? COL[(rnd() * 3) | 0] : COL[3 + ((rnd() * 3) | 0)], .5 + rnd() * .4, 2]); }
-    for (i = 0; i < 2600; i++) { lat = Math.asin(2 * rnd() - 1); lon = rnd() * 6.2832; P.push([Math.cos(lat) * Math.cos(lon), Math.sin(lat), Math.cos(lat) * Math.sin(lon), CH[(rnd() * CH.length) | 0], rnd() < .5 ? COL[(rnd() * 3) | 0] : COL[3 + ((rnd() * 3) | 0)], .45 + rnd() * .4, 3]); }
-    var fit = function () { var r0 = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r0.width; H = r0.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    var fit = function () { var r0 = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r0.width; H = r0.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
     var sub = function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }, dot = function (a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; };
     var norm = function (v) { var l = Math.sqrt(dot(v, v)) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
     var cross = function (a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; };
@@ -310,34 +307,42 @@
     var render = function () {
       queued = false; if (!W) return;
       var vh = window.innerHeight, tr = track.getBoundingClientRect(), total = track.offsetHeight - vh, p = total > 0 ? Math.min(Math.max(-tr.top / total, 0), 1) : 0;
-      var e = p * p * (3 - 2 * p) * .35 + p * .65; // ease the flight a little
-      var C = [lerp(-1.6, .9, e), lerp(2.1, 1.0, e), lerp(-6.8, 15.5, e)], T = [lerp(-1.6, -.4, e), lerp(0, 0.1, e), lerp(3, 23, e)];
-      var f = norm(sub(T, C)), rr = norm(cross([0, 1, 0], f)), u = cross(f, rr), F = H * 0.95, cx = W * 0.5, cy = H * 0.52;
-      ctx.clearRect(0, 0, W, H);
-      var items = [], rot = p * 2.2, cs = Math.cos(rot), sn = Math.sin(rot);
-      var proj = function (x, y, z) { var d = [x - C[0], y - C[1], z - C[2]], zz = dot(d, f); if (zz < .35) return null; return [cx + dot(d, rr) / zz * F, cy - dot(d, u) / zz * F, zz]; };
-      for (var k = 0; k < P.length; k++) {
-        var q = P[k], x = q[0], y = q[1], z = q[2], kind = q[6], sz = .1;
-        if (kind === 2) { var X = x * cs - z * sn, Z = x * sn + z * cs, nx = X, ny = y, nz = Z; x = SAT[0] + X * SR; y = ny * SR; z = SAT[2] + Z * SR; if (dot([nx, ny, nz], norm(sub(C, [x, y, z]))) < -.15) continue; sz = .11; }
-        else if (kind === 3) { var X2 = x * cs - z * sn, Z2 = x * sn + z * cs; var nrm = [X2, y, Z2]; x = CMO[0] + X2 * CR; y = CMO[1] + y * CR; z = CMO[2] + Z2 * CR; if (dot(nrm, norm(sub(C, [x, y, z]))) < -.15) continue; sz = .13; }
-        else if (kind === 0) sz = .9;
-        var pr = proj(x, y, z); if (!pr) continue;
-        var s = F / pr[2] * sz * q[5], d = Math.min(Math.max(s, 0), 34); if (d < 2.2 || pr[0] < -40 || pr[0] > W + 40 || pr[1] < -40 || pr[1] > H + 40) continue;
-        items.push([pr[2], pr[0], pr[1], d, q[3] + q[4], Math.min(1, Math.max(.18, 1.35 - pr[2] / 38)) * (kind === 0 ? .7 : 1)]);
+      var e = p * p * (3 - 2 * p) * .3 + p * .7;
+      var F = H * 2.2, D = lerp(18.5, 8.9, e), el = lerp(24, 32, e) * Math.PI / 180, roll = -9 * Math.PI / 180;
+      var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * .3 - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
+      var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
+      var blur = Math.max(0, 8 * (1 - Math.min(1, p / .5))); cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      var proj = function (x, y, z) { var dx = x - C[0], dy = y - C[1], dz = z - C[2], zz = dy * f[1] + dz * f[2]; if (zz < .5) return null; var X = dx / zz * F, Y = (dy * u[1] + dz * u[2]) / zz * F; return [xc + X * cr + Y * sr, yc - (Y * cr - X * sr), zz]; };
+      // the ring: tidy tracks of orange code, set along the curve like lines of text
+      var drawPlanet = function () {
+      // the planet: a C.O.S.M.O-blue sphere whose right limb is the only part in view
+      var x0 = xc, y0 = yc;
+      var gr = ctx.createRadialGradient(x0 + rpx * .55, y0 - rpx * .15, rpx * .05, x0, y0, rpx * 1.02); gr.addColorStop(0, '#0a5fa8'); gr.addColorStop(.3, '#07508f'); gr.addColorStop(.6, '#042a55'); gr.addColorStop(1, '#010714');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
+      var rim = ctx.createRadialGradient(x0, y0, rpx * .985, x0, y0, rpx * 1.1); rim.addColorStop(0, 'rgba(150,235,255,0)'); rim.addColorStop(.02, 'rgba(150,235,255,.8)'); rim.addColorStop(.18, 'rgba(60,160,255,.35)'); rim.addColorStop(.5, 'rgba(47,107,255,.1)'); rim.addColorStop(1, 'rgba(47,107,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(x0, y0, rpx * 1.1, 0, 6.2832); ctx.fill();
+      ctx.save(); ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.clip(); ctx.strokeStyle = 'rgba(111,220,255,.13)'; ctx.lineWidth = 1;
+      for (var bb = -5; bb <= 5; bb++) { ctx.beginPath(); ctx.ellipse(x0, y0 + bb * rpx * .17, rpx * 1.3, rpx * (.06 + Math.abs(bb) * .012), 0, 0, 6.2832); ctx.stroke(); }
+      ctx.restore();
+      };
+      var items = [], spin = p * 1.1;
+      var rp = function (a, r) { return proj(Math.cos(a) * r, 0, Math.sin(a) * r); };
+      for (var k = 0; k < glyphs.length; k++) {
+        var g = glyphs[k], a = g[0] + spin * (g[4] % 2 ? -1 : 1), pr = rp(a, g[1]); if (!pr) continue;
+        var s = F / pr[2] * .125; if (s < 3 || pr[0] < -60 || pr[0] > W + 60 || pr[1] < -60 || pr[1] > H + 60) continue;
+        var p2 = rp(a + .01, g[1]); var rot = p2 ? Math.atan2(p2[1] - pr[1], p2[0] - pr[0]) : 0;
+        var behind = pr[2] > D; // the far side of the ring, seen over the planet, is dimmer
+        items.push([pr[2], pr[0], pr[1], Math.min(s, 40), g[2] + g[3], behind ? .75 : 1, rot]);
       }
-      // planet bodies (dark discs with a glow) and the C.O.S.M.O mark
-      var bodies = [[SAT, SR, 'rgba(247,147,30,', 'rgba(47,107,255,'], [CMO, CR, 'rgba(47,107,255,', 'rgba(247,147,30,']];
-      bodies.forEach(function (bd) { var pr = proj(bd[0][0], bd[0][1], bd[0][2]); if (!pr) return; var rpx = F / pr[2] * bd[1]; items.push([pr[2], pr[0], pr[1], -rpx, bd[2] + '|' + bd[3], 1]); });
       items.sort(function (A, B) { return B[0] - A[0]; });
-      for (var n = 0; n < items.length; n++) {
-        var it = items[n];
-        if (it[3] < 0) { var rp = -it[3], pp = it[4].split('|'); var g = ctx.createRadialGradient(it[1] - rp * .25, it[2] - rp * .25, rp * .1, it[1], it[2], rp); g.addColorStop(0, 'rgba(8,14,44,.96)'); g.addColorStop(1, 'rgba(2,4,16,.99)'); ctx.globalAlpha = 1; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(it[1], it[2], rp, 0, 6.2832); ctx.fill();
-          var gl = ctx.createRadialGradient(it[1], it[2], rp * .92, it[1], it[2], rp * 1.35); gl.addColorStop(0, pp[1] + '.35)'); gl.addColorStop(.5, pp[0] + '.12)'); gl.addColorStop(1, pp[0] + '0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(it[1], it[2], rp * 1.35, 0, 6.2832); ctx.fill();
-          if (logoOk && rp > 70 && it[0] > 3) { var fade = Math.min(1, (rp - 70) / 120); ctx.globalAlpha = .9 * fade; var ls = rp * .85; ctx.drawImage(logo, it[1] - ls / 2, it[2] - ls / 2 * 1.0, ls, ls * logo.naturalHeight / logo.naturalWidth); ctx.globalAlpha = 1; }
-          continue; }
-        var sp = spr[it[4]]; ctx.globalAlpha = it[5]; ctx.drawImage(sp, it[1] - it[3], it[2] - it[3] / 2, it[3] * 2, it[3]);
-      }
-      ctx.globalAlpha = 1;
+      var paint = function (it) {
+        var spt = sprite(it[4].charAt(0), it[4].slice(1)); ctx.globalAlpha = it[5];
+        var c2 = Math.cos(it[6]) * dpr, s2 = Math.sin(it[6]) * dpr; ctx.setTransform(c2, s2, -s2, c2, it[1] * dpr, it[2] * dpr); ctx.drawImage(spt, -it[3] / 2, -it[3] / 2, it[3], it[3]);
+      };
+      var n = 0; for (; n < items.length && items[n][0] > D; n++) paint(items[n]); // the far side of the ring goes behind the planet
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1; drawPlanet();
+      for (; n < items.length; n++) paint(items[n]);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1;
     };
     function queue() { if (!queued) { queued = true; window.requestAnimationFrame(render); } }
     fit(); queue();
