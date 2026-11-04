@@ -1783,3 +1783,16 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .order-card .sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(47, 107, 255, .18), transparent 40%), repeating-linear-gradient(0deg, rgba(79, 209, 255, .035) 0 1px, transparent 1px 4px); mix-blend-mode: screen; }
 
 .order-card .sheet img.hd { position: absolute; left: 0; top: 0; filter: none; clip-path: inset(0 0 85.6% 0); }
+
+/* Agent cards: padding restored (a list rule had zeroed it) and each card is colour coded like the moving diagram. */
+.roster.agentcards .agent-card { padding: 22px 20px 24px !important; --c: #7ec8ff; border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); border-top: 3px solid var(--c); border-image: none; background: radial-gradient(260px 200px at 50% 18%, color-mix(in srgb, var(--c) 20%, transparent), rgba(4, 8, 32, .34) 72%); }
+.agent-card .gl { stroke: var(--c); stroke-opacity: .9; }
+.agent-card .gl circle { fill: #fff; filter: drop-shadow(0 0 3px var(--c)); }
+.agent-card .gl .fl { fill: var(--c); fill-opacity: .16; stroke: var(--c); }
+.agent-card .ac-art { filter: drop-shadow(0 0 10px var(--c)); }
+.agent-card .ac-gk, .agent-card .role { color: var(--c); }
+.agent-card:first-child .ac-art { filter: drop-shadow(0 0 10px var(--c)); }
+.agent-card .ac-code { border-left-color: var(--c); border-color: color-mix(in srgb, var(--c) 30%, transparent); border-left: 3px solid var(--c); }
+
+/* Shooting stars in the C.O.S.M.O orange. */
+.morph-sky i { background: linear-gradient(90deg, rgba(247, 147, 30, 0), rgba(247, 147, 30, .75) 70%, #ffe0b0); box-shadow: 0 0 10px 1px rgba(247, 147, 30, .6); }
