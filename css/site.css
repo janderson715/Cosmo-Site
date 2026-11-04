@@ -1400,3 +1400,14 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* The hero ends with its buttons; they need room before the next section (the trust strip that used to sit here moved into "What to expect"). */
 .hero { padding-bottom: clamp(56px, 7vw, 96px); }
+
+
+/* The Constellation: a swirling star nebula. The stars turn around the file and the five members drift on their own orbits (js/site.js, canvas). */
+.nebula { position: relative; width: 100%; aspect-ratio: 600 / 470; }
+.nebula .neb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; -webkit-mask-image: radial-gradient(ellipse at center, #000 56%, transparent 76%); mask-image: radial-gradient(ellipse at center, #000 56%, transparent 76%); }
+.neb-file { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 12px 22px; text-align: center; background: #0e1640; border: 1.5px solid #f7931e; box-shadow: 0 0 40px rgba(247, 147, 30, .25); }
+.neb-file b { display: block; color: #fff; font: 600 14px var(--mono); white-space: nowrap; }
+.neb-file span { display: block; margin-top: 4px; color: #b9c5e6; font: 400 12px var(--font); }
+.neb-name { position: absolute; left: 0; top: 0; z-index: 2; color: #fff; font: 700 21px var(--font); text-shadow: 0 0 14px rgba(4, 7, 26, .95), 0 0 4px rgba(4, 7, 26, .9); white-space: nowrap; pointer-events: none; will-change: transform; }
+.neb-name.chair { color: #ffb35c; }
+@media (max-width: 860px) { .neb-name { font-size: 17px; } .neb-file b { font-size: 12px; } }
