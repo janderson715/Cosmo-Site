@@ -324,13 +324,19 @@
       ctx.fillStyle = '#000208'; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
       var inn = ctx.createRadialGradient(x0, y0, rpx * .9, x0, y0, rpx); inn.addColorStop(0, 'rgba(20,110,230,0)'); inn.addColorStop(1, 'rgba(30,130,255,.45)'); ctx.fillStyle = inn; ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.fill();
       var rim = ctx.createRadialGradient(x0, y0, rpx * .995, x0, y0, rpx * 1.14); rim.addColorStop(0, 'rgba(170,235,255,0)'); rim.addColorStop(.03, 'rgba(170,235,255,.95)'); rim.addColorStop(.1, 'rgba(70,170,255,.6)'); rim.addColorStop(.3, 'rgba(30,100,255,.22)'); rim.addColorStop(1, 'rgba(30,100,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(x0, y0, rpx * 1.14, 0, 6.2832); ctx.fill();
-      // faded cyberspace inside the planet: a loose web of glowing nodes and soft links that is brightest at the edge and fades into the dark
+      // meridian and parallel lines wrapped around the planet in cyber form: thin glowing lines, brightest near the edge, with data pulses running along them
       ctx.save(); ctx.beginPath(); ctx.arc(x0, y0, rpx, 0, 6.2832); ctx.clip();
-      var pt = function (n) { var aa = n[0] + Math.sin(p * 5 + n[3]) * .012, rr = n[1] * (1 + Math.sin(p * 4 + n[3] * 2) * .006); return [x0 + Math.cos(aa) * rr * rpx, y0 + Math.sin(aa) * rr * rpx, rr]; };
-      var fade = function (rr) { var q = Math.min(1, Math.max(0, (rr - .45) / .55)); return q * q; };
-      ctx.lineWidth = 1; ctx.lineCap = 'round';
-      for (var li = 0; li < links.length; li++) { var L = links[li], A = pt(nodes[L[0]]), B = pt(nodes[L[1]]), fa = fade((A[2] + B[2]) / 2); if (fa < .02) continue; ctx.strokeStyle = 'rgba(' + (L[2] ? '255,160,60' : '90,190,255') + ',' + (fa * (L[2] ? .4 : .5)).toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.quadraticCurveTo((A[0] + B[0]) / 2 + L[3] * rpx, (A[1] + B[1]) / 2 + L[4] * rpx, B[0], B[1]); ctx.stroke(); }
-      for (var ni = 0; ni < nodes.length; ni++) { var N = nodes[ni], P = pt(N), fn = fade(P[2]); if (fn < .02) continue; ctx.fillStyle = N[2] ? 'rgba(255,170,70,' + (Math.min(1, fn * 1.1)).toFixed(3) + ')' : 'rgba(130,215,255,' + (Math.min(1, fn * 1.2)).toFixed(3) + ')'; var sz = N[4] * (rpx > 400 ? 1 : .6); ctx.beginPath(); ctx.arc(P[0], P[1], sz, 0, 6.2832); ctx.fill(); if (N[4] > 2) { ctx.fillStyle = 'rgba(90,190,255,' + (fn * .12).toFixed(3) + ')'; ctx.beginPath(); ctx.arc(P[0], P[1], sz * 5, 0, 6.2832); ctx.fill(); } }
+      var DEG = Math.PI / 180, tl = -18 * DEG, ct = Math.cos(tl), st = Math.sin(tl), off = p * 40 * DEG;
+      var sph = function (lon, lat) { var cl = Math.cos(lat), X = cl * Math.sin(lon), Y = Math.sin(lat), Z = cl * Math.cos(lon), Y2 = Y * ct - Z * st, Z2 = Y * st + Z * ct; if (Z2 < .015) return null; return [x0 + X * rpx, y0 - Y2 * rpx, Math.sqrt(X * X + Y2 * Y2)]; };
+      var lit = function (rr) { var q = Math.min(1, Math.max(0, (rr - .5) / .48)); return .16 + .6 * q * q * (3 - 2 * q); };
+      ctx.lineWidth = 1.2; ctx.lineCap = 'butt';
+      var seg = function (A, B, al, rgb) { if (!A || !B) return; ctx.strokeStyle = 'rgba(' + rgb + ',' + al.toFixed(3) + ')'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke(); };
+      var m, la, pa, pb;
+      for (m = -90; m <= 90; m += 15) { pa = null; for (la = -90; la <= 90; la += 3) { pb = sph(m * DEG + off, la * DEG); if (pa && pb) seg(pa, pb, lit((pa[2] + pb[2]) / 2) * (1), '90,200,255'); pa = pb; } }
+      for (la = -75; la <= 75; la += 15) { pa = null; for (m = -90; m <= 90; m += 3) { pb = sph(m * DEG + off, la * DEG); if (pa && pb) seg(pa, pb, lit((pa[2] + pb[2]) / 2) * .8, la === 0 ? '255,170,70' : '90,200,255'); pa = pb; } }
+      // small markers where meridians meet the equator and the 45 degree parallels, and a few pulses of data running down the lines
+      for (m = -90; m <= 90; m += 30) { [-45, 0, 45].forEach(function (L) { var q = sph(m * DEG + off, L * DEG); if (!q) return; var al = lit(q[2]) * 1.5; ctx.fillStyle = L === 0 ? 'rgba(255,170,70,' + Math.min(1, al).toFixed(3) + ')' : 'rgba(150,225,255,' + Math.min(1, al).toFixed(3) + ')'; ctx.fillRect(q[0] - 2, q[1] - 2, 4, 4); }); }
+      for (var pu = 0; pu < 7; pu++) { var pl = (((p * 2.2 + pu * .149) % 1) * 170 - 85) * DEG, q2 = sph((-75 + pu * 25) * DEG + off, pl); if (!q2) continue; var al2 = Math.min(1, lit(q2[2]) * 2.2); ctx.fillStyle = 'rgba(150,235,255,' + al2.toFixed(3) + ')'; ctx.shadowColor = '#4fd1ff'; ctx.shadowBlur = 8; ctx.fillRect(q2[0] - 2, q2[1] - 2, 4, 4); ctx.shadowBlur = 0; }
       ctx.restore();
       };
       var items = [], spin = p * 1.1;
