@@ -1408,14 +1408,23 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .neb-file { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; padding: 12px 22px; text-align: center; background: #0e1640; border: 1.5px solid #f7931e; box-shadow: 0 0 40px rgba(247, 147, 30, .25); }
 .neb-file b { display: block; color: #fff; font: 600 14px var(--mono); white-space: nowrap; }
 .neb-file span { display: block; margin-top: 4px; color: #b9c5e6; font: 400 12px var(--font); }
-.neb-member { position: absolute; left: 0; top: 0; z-index: 2; width: 46px; height: 46px; will-change: transform; pointer-events: none; }
-.neb-ico { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle, rgba(8, 12, 40, .92) 55%, rgba(8, 12, 40, .35) 100%); border: 1px solid rgba(160, 215, 255, .55); box-shadow: 0 0 22px rgba(120, 190, 255, .55), inset 0 0 12px rgba(120, 190, 255, .25); color: #cfeaff; }
-.neb-ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.neb-member b { position: absolute; left: 50%; top: 54px; transform: translateX(-50%); color: #fff; font: 700 19px var(--font); white-space: nowrap; text-shadow: 0 0 14px rgba(4, 7, 26, .95), 0 0 4px rgba(4, 7, 26, .9); }
-.neb-member.up b { top: auto; bottom: 54px; }
-.neb-member.chair .neb-ico { border-color: rgba(255, 190, 110, .75); box-shadow: 0 0 26px rgba(255, 170, 80, .6), inset 0 0 12px rgba(255, 170, 80, .3); color: #ffd9a8; }
+.neb-member { --c: #7ec8ff; position: absolute; left: 0; top: 0; z-index: 2; width: 92px; height: 92px; will-change: transform; pointer-events: none; }
+.neb-emblem { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 10px var(--c)); }
+.neb-emblem .disc { fill: rgba(6, 10, 34, .88); stroke: var(--c); stroke-opacity: .35; stroke-width: 1; }
+.neb-emblem .rim { fill: none; stroke: var(--c); stroke-opacity: .75; stroke-width: 1.3; }
+.neb-emblem .rg { fill: none; stroke: var(--c); transform-box: fill-box; transform-origin: center; }
+.neb-emblem .rg.a { stroke-opacity: .7; stroke-width: 3.2; stroke-dasharray: 1.2 5.2; animation: nebspin 60s linear infinite; }
+.neb-emblem .rg.b { stroke-opacity: .5; stroke-width: 1.2; stroke-dasharray: 10 7 2 7; animation: nebspin 45s linear infinite reverse; }
+.neb-emblem .gl { fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.neb-emblem .gl circle { fill: var(--c); stroke: none; }
+.neb-emblem .gl .fl { fill: var(--c); fill-opacity: .22; stroke: var(--c); }
+@keyframes nebspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .neb-emblem .rg { animation: none; } }
+.neb-member b { position: absolute; left: 50%; top: 100px; transform: translateX(-50%); color: #fff; font: 700 19px var(--font); white-space: nowrap; text-shadow: 0 0 14px rgba(4, 7, 26, .95), 0 0 4px rgba(4, 7, 26, .9); }
+.neb-member .gk { font: italic 400 22px Georgia, 'Times New Roman', serif; color: var(--c); margin-right: 4px; }
+.neb-member.up b { top: auto; bottom: 100px; }
 .neb-member.chair b { color: #ffb35c; }
-@media (max-width: 860px) { .neb-member { width: 38px; height: 38px; } .neb-ico svg { width: 20px; height: 20px; } .neb-member b { font-size: 15px; top: 44px; } .neb-member.up b { bottom: 44px; } .neb-file b { font-size: 12px; } }
+@media (max-width: 860px) { .neb-member { width: 68px; height: 68px; } .neb-member b { font-size: 15px; top: 74px; } .neb-member .gk { font-size: 17px; } .neb-member.up b { bottom: 74px; } .neb-file b { font-size: 12px; } }
 
 /* The star field fills the whole Constellation section, behind the text. */
 .section.dark > canvas.neb-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent); }
