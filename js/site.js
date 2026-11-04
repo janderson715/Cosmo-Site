@@ -299,11 +299,21 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
     var cities = [], lights = [], links = [], n, k;
     var onTop = function (maxDeg) { var th = Math.acos(1 - rn() * (1 - Math.cos(maxDeg * Math.PI / 180))), ph = rn() * 6.2832; return [Math.sin(th) * Math.cos(ph), -Math.cos(th), Math.sin(th) * Math.sin(ph)]; };
     var jig = function (v, s) { var x = v[0] + gs() * s, y = v[1] + gs() * s, z = v[2] + gs() * s, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; };
-    for (n = 0; n < 1800; n++) cities.push([onTop(28), rn() < .1]);
+    for (n = 0; n < 1000; n++) cities.push([onTop(38), rn() < .12]);
     cities.forEach(function (c) { var m = 3 + Math.floor(rn() * 7); for (k = 0; k < m; k++) lights.push([jig(c[0], .004), rn() < .25 || c[1] ? 1 : 0]); });
-    for (n = 0; n < 1500; n++) lights.push([onTop(28), rn() < .2 ? 1 : 0]);
-    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai && x[0] < .0012) links.push([ai, x[1], rn() < .2, rn()]); }); });
+    for (n = 0; n < 700; n++) lights.push([onTop(38), rn() < .2 ? 1 : 0]);
+    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai && x[0] < .004) links.push([ai, x[1], rn() < .2, rn()]); }); });
     // the tilted axis the globe turns about (leaning so the lights travel on a diagonal, and rise over the horizon)
+    // the real world drawn in cyber lines: coastlines, country borders and real cities, squeezed onto the globe so a whole region shows at once
+    var wl = [], WC = .22, WLON0 = 30, WLAT0 = 72;
+    var wvec = function (lon, lat) { var a = (lon - WLON0) * WC * Math.PI / 180, b = (WLAT0 - lat) * WC * Math.PI / 180; return [Math.sin(a) * Math.cos(b), -Math.cos(a) * Math.cos(b), Math.sin(b)]; };
+    if (window.fetch) window.fetch('assets/data/world-lines.json?v=20261109').then(function (r) { return r.json(); }).then(function (d) {
+      wl = []; d.c.forEach(function (l) { wl.push([0, l.map(function (q) { return wvec(q[0], q[1]); })]); }); d.b.forEach(function (l) { wl.push([1, l.map(function (q) { return wvec(q[0], q[1]); })]); });
+      cities.length = 0; lights.length = 0; links.length = 0;
+      d.t.forEach(function (c, i) { cities.push([wvec(c[1], c[2]), i % 7 === 0]); });
+      cities.forEach(function (c) { for (var q = 0; q < 6; q++) lights.push([jig(c[0], .006), rn() < .3 ? 1 : 0]); });
+      cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var dd = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [dd, bi]; }).filter(function (x) { return x[1] !== ai && x[0] < .02; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai) links.push([ai, x[1], rn() < .2, rn()]); }); });
+    }).catch(function () {});
     var AX = (function () { var x = .5, y = .22, z = .84, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; })();
     var fit = function () { var r = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
     var render = function () {
@@ -320,6 +330,9 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
       var cs = Math.cos(psi), sn = Math.sin(psi), kx = AX[0], ky = AX[1], kz = AX[2];
       var rot = function (v, lift) { var d = kx * v[0] + ky * v[1] + kz * v[2], cxv = [ky * v[2] - kz * v[1], kz * v[0] - kx * v[2], kx * v[1] - ky * v[0]], x = v[0] * cs + cxv[0] * sn + kx * d * (1 - cs), y = v[1] * cs + cxv[1] * sn + ky * d * (1 - cs), z = v[2] * cs + cxv[2] * sn + kz * d * (1 - cs), r = Rp * (1 + (lift || 0)); return [cx + x * r, cy + y * r, z]; };
       ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 6.2832); ctx.clip();
+      // coastlines and country borders, thin glowing lines on the turning globe
+      ctx.lineWidth = 1; ctx.setLineDash([]);
+      for (var wi = 0; wi < wl.length; wi++) { var WL = wl[wi], pts = WL[1], pen = false, any = false; ctx.strokeStyle = WL[0] ? 'rgba(79,170,255,.28)' : 'rgba(120,225,255,.7)'; ctx.beginPath(); for (var wp = 0; wp < pts.length; wp++) { var wq = rot(pts[wp], 0); if (wq[2] < 0 || wq[0] < -200 || wq[0] > W + 200 || wq[1] < H * .55 || wq[1] > H + 200) { pen = false; continue; } if (pen) ctx.lineTo(wq[0], wq[1]); else ctx.moveTo(wq[0], wq[1]); pen = true; any = true; } if (any) ctx.stroke(); }
       // the network: hubs on the globe joined by glowing arcs, with data packets running along them
       var cp = cities.map(function (c) { return rot(c[0], 0); });
       var onScr = function (q) { return q[2] > 0 && q[0] > -80 && q[0] < W + 80 && q[1] > H * .6 - 20 && q[1] < H + 60; };
