@@ -294,12 +294,16 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
     var W = 0, H = 0, dpr = 1, queued = false, still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var sd = 21, rn = function () { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }, gs = function () { return Math.sqrt(-2 * Math.log(rn() + 1e-9)) * Math.cos(6.2832 * rn()); };
     var sky = []; for (var i = 0; i < 2400; i++) { var z = .15 + Math.pow(rn(), 1.6) * .85; sky.push([rn(), rn() * .8, z, rn() < .08 ? 2 : 1, rn() * 6.28, ['255,255,255', '255,255,255', '190,215,255', '255,214,150', '160,225,255'][Math.floor(rn() * 5)]]); }
-    // cities on the Earth: clusters of lights, each as (angle around the planet, height above the surface in px)
-    var cities = [], lights = [], links = [], n, k, c0;
-    for (n = 0; n < 70; n++) cities.push([rn() * 6.2832, rn() * 150 + 10, rn() < .18]);
-    cities.forEach(function (c, ci) { var m = 14 + Math.floor(rn() * 22); for (k = 0; k < m; k++) lights.push([c[0] + gs() * .006, c[1] + gs() * 9, rn() < .3 ? 1 : 0, c[2] ? 1 : 0]); });
-    for (n = 0; n < 260; n++) lights.push([rn() * 6.2832, rn() * 190, rn() < .2 ? 1 : 0, 0]);
-    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.abs(a[0] - b[0]); d = Math.min(d, 6.2832 - d); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 2); near.forEach(function (x) { if (x[1] > ai) links.push([ai, x[1], rn() < .22]); }); });
+    // the Earth is a real sphere: cities and lights are points on it (unit vectors around the top of the globe) that turn about a tilted axis
+    var cities = [], lights = [], links = [], n, k;
+    var onTop = function (maxDeg) { var th = Math.acos(1 - rn() * (1 - Math.cos(maxDeg * Math.PI / 180))), ph = rn() * 6.2832; return [Math.sin(th) * Math.cos(ph), -Math.cos(th), Math.sin(th) * Math.sin(ph)]; };
+    var jig = function (v, s) { var x = v[0] + gs() * s, y = v[1] + gs() * s, z = v[2] + gs() * s, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; };
+    for (n = 0; n < 760; n++) cities.push([onTop(46), rn() < .12]);
+    cities.forEach(function (c) { var m = 3 + Math.floor(rn() * 7); for (k = 0; k < m; k++) lights.push([jig(c[0], .004), rn() < .25 || c[1] ? 1 : 0]); });
+    for (n = 0; n < 900; n++) lights.push([onTop(46), rn() < .2 ? 1 : 0]);
+    cities.forEach(function (a, ai) { var near = cities.map(function (b, bi) { var d = Math.pow(a[0][0] - b[0][0], 2) + Math.pow(a[0][1] - b[0][1], 2) + Math.pow(a[0][2] - b[0][2], 2); return [d, bi]; }).filter(function (x) { return x[1] !== ai; }).sort(function (u, v) { return u[0] - v[0]; }).slice(0, 3); near.forEach(function (x) { if (x[1] > ai) links.push([ai, x[1], rn() < .2, rn()]); }); });
+    // the tilted axis the globe turns about (leaning so the lights travel on a diagonal, and rise over the horizon)
+    var AX = (function () { var x = .5, y = .22, z = .84, l = Math.sqrt(x * x + y * y + z * z); return [x / l, y / l, z / l]; })();
     var fit = function () { var r = cv.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
     var render = function () {
       queued = false; if (!W) fit(); if (!W || !H) return;
@@ -308,16 +312,26 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
       // the sky: many stars that drift with the scroll, near ones faster, with a little twinkle
       var tw = window.performance ? window.performance.now() / 1000 : 0;
       for (var s = 0; s < sky.length; s++) { var S = sky[s], sx = (((S[0] * W - p * S[2] * 320) % W) + W) % W, sy = (((S[1] * H + p * S[2] * 110) % (H * .8)) + H * .8) % (H * .8); ctx.fillStyle = 'rgba(' + S[5] + ',' + ((.35 + S[2] * .6) * (.75 + .25 * Math.sin(tw * 1.2 + S[4]))).toFixed(2) + ')'; var q = S[3] * (S[2] > .7 ? 1.4 : 1); ctx.fillRect(sx, sy, q, q); }
-      // the Earth: a huge dark sphere whose top edge curves across the bottom; it turns with the scroll
-      var Rp = W * 2.6, cx = W / 2, capH = H * .24, cy = H - capH + Rp, th = p * .7 + 1.5708 * 0;
+      // the Earth: a huge dark sphere whose top edge curves across the bottom; its lights and links turn slowly about a tilted axis
+      var Rp = W * 2.6, cx = W / 2, capH = H * .24, cy = H - capH + Rp, psi = p * .2 + tw * .003;
       var body = ctx.createRadialGradient(cx, cy, Rp * .93, cx, cy, Rp); body.addColorStop(0, '#02061a'); body.addColorStop(.9, '#040d2b'); body.addColorStop(1, '#0b2a6a'); ctx.fillStyle = body; ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 6.2832); ctx.fill();
       var rim = ctx.createRadialGradient(cx, cy, Rp * .996, cx, cy, Rp * 1.012); rim.addColorStop(0, 'rgba(170,235,255,0)'); rim.addColorStop(.18, 'rgba(190,240,255,.95)'); rim.addColorStop(.5, 'rgba(60,160,255,.4)'); rim.addColorStop(1, 'rgba(47,107,255,0)'); ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(cx, cy, Rp * 1.012, 0, 6.2832); ctx.fill();
-      var pos = function (ang, h) { var a = ang + th - 1.5708, r = Rp - h; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+      var cs = Math.cos(psi), sn = Math.sin(psi), kx = AX[0], ky = AX[1], kz = AX[2];
+      var rot = function (v, lift) { var d = kx * v[0] + ky * v[1] + kz * v[2], cxv = [ky * v[2] - kz * v[1], kz * v[0] - kx * v[2], kx * v[1] - ky * v[0]], x = v[0] * cs + cxv[0] * sn + kx * d * (1 - cs), y = v[1] * cs + cxv[1] * sn + ky * d * (1 - cs), z = v[2] * cs + cxv[2] * sn + kz * d * (1 - cs), r = Rp * (1 + (lift || 0)); return [cx + x * r, cy + y * r, z]; };
       ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 6.2832); ctx.clip();
-      ctx.lineWidth = 1; ctx.setLineDash([3, 7]); ctx.lineDashOffset = -tw * 12;
-      links.forEach(function (L) { var A = cities[L[0]], B = cities[L[1]], a = pos(A[0], A[1]), b = pos(B[0], B[1]); if ((a[1] < -20 && b[1] < -20) || (a[1] > H + 40 && b[1] > H + 40) || (a[0] < -60 && b[0] < -60) || (a[0] > W + 60 && b[0] > W + 60)) return; var mid = pos((A[0] + B[0]) / 2 + (Math.abs(A[0] - B[0]) > 3.14 ? 3.1416 : 0), (A[1] + B[1]) / 2 + 26 + Math.abs(a[0] - b[0]) * .12); ctx.strokeStyle = L[2] ? 'rgba(255,179,92,.8)' : 'rgba(111,220,255,.7)'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.quadraticCurveTo(mid[0], mid[1], b[0], b[1]); ctx.stroke(); });
+      // the network: hubs on the globe joined by glowing arcs, with data packets running along them
+      var cp = cities.map(function (c) { return rot(c[0], 0); });
+      var onScr = function (q) { return q[2] > 0 && q[0] > -80 && q[0] < W + 80 && q[1] > H * .6 - 20 && q[1] < H + 60; };
+      ctx.lineWidth = 1; ctx.setLineDash([2, 5]); ctx.lineDashOffset = -tw * 5;
+      var vis = [];
+      links.forEach(function (L) { var a = cp[L[0]], b = cp[L[1]]; if (!onScr(a) && !onScr(b)) return; if (a[2] < 0 || b[2] < 0) return; var A = cities[L[0]][0], B = cities[L[1]][0], mv = [A[0] + B[0], A[1] + B[1], A[2] + B[2]], ml = Math.sqrt(mv[0] * mv[0] + mv[1] * mv[1] + mv[2] * mv[2]) || 1, dd = Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)), mid = rot([mv[0] / ml, mv[1] / ml, mv[2] / ml], Math.min(.03, dd / Rp * .6)); ctx.strokeStyle = L[2] ? 'rgba(255,179,92,.75)' : 'rgba(111,220,255,.6)'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.quadraticCurveTo(mid[0], mid[1], b[0], b[1]); ctx.stroke(); vis.push([a, mid, b, L[2], L[3]]); });
       ctx.setLineDash([]);
-      for (var li = 0; li < lights.length; li++) { var Lg = lights[li], q2 = pos(Lg[0], Lg[1]); if (q2[0] < -4 || q2[0] > W + 4 || q2[1] < H * .6 || q2[1] > H + 4) continue; ctx.fillStyle = Lg[3] ? 'rgba(255,200,120,.95)' : Lg[2] ? 'rgba(255,200,120,.9)' : 'rgba(150,230,255,.9)'; ctx.fillRect(q2[0] - 1, q2[1] - 1, 2, 2); }
+      // data packets
+      vis.forEach(function (V, vi) { if (vi % 2) return; var t = ((tw * .22 + V[4]) % 1), u = 1 - t, px = u * u * V[0][0] + 2 * u * t * V[1][0] + t * t * V[2][0], py = u * u * V[0][1] + 2 * u * t * V[1][1] + t * t * V[2][1]; ctx.fillStyle = V[3] ? 'rgba(255,220,160,.95)' : 'rgba(210,245,255,.95)'; ctx.shadowColor = V[3] ? '#ffb35c' : '#4fd1ff'; ctx.shadowBlur = 8; ctx.fillRect(px - 1.5, py - 1.5, 3, 3); ctx.shadowBlur = 0; });
+      // small lights between the hubs
+      for (var li = 0; li < lights.length; li++) { var Lg = lights[li], q2 = rot(Lg[0], 0); if (q2[2] < 0 || q2[0] < -4 || q2[0] > W + 4 || q2[1] < H * .6 || q2[1] > H + 4) continue; ctx.fillStyle = Lg[1] ? 'rgba(255,200,120,.8)' : 'rgba(150,230,255,.75)'; ctx.fillRect(q2[0] - .75, q2[1] - .75, 1.5, 1.5); }
+      // hubs: a bright node with a soft halo (orange for the busiest)
+      for (var ci = 0; ci < cities.length; ci++) { var q = cp[ci]; if (!onScr(q)) continue; var hot = cities[ci][1]; ctx.fillStyle = hot ? 'rgba(255,170,70,.22)' : 'rgba(79,209,255,.2)'; ctx.beginPath(); ctx.arc(q[0], q[1], hot ? 8 : 6, 0, 6.2832); ctx.fill(); ctx.fillStyle = hot ? '#ffd9a0' : '#d8f6ff'; var sz = hot ? 4 : 3; ctx.fillRect(q[0] - sz / 2, q[1] - sz / 2, sz, sz); }
       ctx.restore();
     };
     var queue = function () { if (!queued) { queued = true; window.requestAnimationFrame(render); } };
