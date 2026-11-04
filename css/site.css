@@ -1428,3 +1428,30 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* The star field fills the whole Constellation section, behind the text. */
 .section.dark > canvas.neb-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent); }
+
+
+/* Runs anywhere: real brand logos in colour on pale tiles, a colour per column, and a row of platform logos under the server. */
+.archx-logos { width: auto; min-width: 0; gap: 6px; flex: none; }
+.archx-logos .lt, .archx-os .lt { display: grid; place-items: center; width: 46px; height: 46px; background: #eef3ff; border-radius: 0; flex: none; box-shadow: 0 6px 16px rgba(0, 0, 0, .35); }
+.archx-logos .lt img, .archx-os .lt img { width: 28px; height: 28px; max-width: none; object-fit: contain; opacity: 1; }
+.archx-os { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.archx-os .lt { width: 40px; height: 40px; }
+.archx-os .lt img { width: 24px; height: 24px; }
+.archx-item { min-height: 76px; }
+.archx-col.in { border-top: 3px solid #4fd1ff; background: linear-gradient(180deg, rgba(79, 209, 255, .09), rgba(4, 7, 26, .55) 40%); }
+.archx-col.ai { border-top: 3px solid #a78bfa; background: linear-gradient(180deg, rgba(167, 139, 250, .12), rgba(4, 7, 26, .55) 40%); }
+.archx-col.ai .archx-cap { color: #c4b5fd; }
+.archx-core { border-top: 3px solid #f7931e; background: radial-gradient(420px 300px at 50% 28%, rgba(247, 147, 30, .12), rgba(4, 7, 26, .55) 70%); }
+.archx-core .archx-cap { color: #ffb35c; }
+.archx-mark { width: 72px; filter: drop-shadow(0 0 20px rgba(247, 147, 30, .45)) drop-shadow(0 0 14px rgba(79, 209, 255, .35)); }
+.archx-teams { text-shadow: 0 0 22px rgba(247, 147, 30, .5); }
+.archx-teams-label { color: #ffb35c; }
+.archx-flowlines .fl { stroke: rgba(79, 209, 255, .5); }
+.archx-flowlines .fl.out { stroke: rgba(167, 139, 250, .55); }
+.archx-flowlines .fl.down { stroke: rgba(247, 147, 30, .6); }
+@media (max-width: 1180px) { .archx-logos .lt { width: 40px; height: 40px; } .archx-logos .lt img { width: 24px; height: 24px; } .archx-item { gap: 12px; } }
+@media (max-width: 520px) { .archx-item { flex-direction: column; align-items: flex-start; gap: 10px; } }
+/* logos sit above their text so the text keeps the full column width */
+.archx-item { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px 0; min-height: 0; }
+.archx-logos { flex-wrap: wrap; }
+@media (max-width: 520px) { .archx-item { gap: 12px; } }
