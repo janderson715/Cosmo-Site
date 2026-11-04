@@ -1776,3 +1776,10 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 #chatbot .section-head .lead { padding-top: 0; }
 #chatbot .section-head .lead::before { content: "\201C"; position: static; display: inline; transform: none; margin-right: .08em; font: 700 1.9em/0 Georgia, 'Times New Roman', serif; vertical-align: -.2em; color: #f7931e; text-shadow: 0 0 18px rgba(247, 147, 30, .45); }
 #chatbot .section-head .lead::after { content: "\201D"; display: inline; margin-left: .08em; font: 700 1.9em/0 Georgia, 'Times New Roman', serif; vertical-align: -.2em; color: #f7931e; text-shadow: 0 0 18px rgba(247, 147, 30, .45); }
+
+/* The work-order PDF, dark: the paper becomes C.O.S.M.O navy with light text, framed with a glow and an orange edge. */
+.order-card .sheet { position: relative; margin: 14px 0 0; border: 1px solid rgba(79, 209, 255, .35); border-bottom: 3px solid #f7931e; box-shadow: 0 0 34px rgba(47, 107, 255, .28); background: #07102e; overflow: hidden; }
+.order-card .sheet img { display: block; width: 100%; height: auto; filter: invert(1) hue-rotate(180deg) saturate(1.15) brightness(.92) contrast(1.05); }
+.order-card .sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(47, 107, 255, .18), transparent 40%), repeating-linear-gradient(0deg, rgba(79, 209, 255, .035) 0 1px, transparent 1px 4px); mix-blend-mode: screen; }
+
+.order-card .sheet img.hd { position: absolute; left: 0; top: 0; filter: none; clip-path: inset(0 0 85.6% 0); }
