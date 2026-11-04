@@ -314,7 +314,7 @@
       var F = H * 2.2, D = lerp(11.5, 9.4, e), el = lerp(11, 10, e) * Math.PI / 180, roll = 0 * Math.PI / 180;
       var rpx = F * R / Math.sqrt(D * D - R * R), xc = W * lerp(.3, .6, e) - rpx, yc = H * .5, cr = Math.cos(roll), sr = Math.sin(roll);
       var C = [0, D * Math.sin(el), -D * Math.cos(el)], f = [0, -Math.sin(el), Math.cos(el)], u = [0, Math.cos(el), Math.sin(el)];
-      var blur = Math.max(0, 8 * (1 - Math.min(1, p / .5))); cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
+      var blur = 0; // sharp from the first frame cv.style.filter = blur > .25 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       var proj = function (x, y, z) { var dx = x - C[0], dy = y - C[1], dz = z - C[2], zz = dy * f[1] + dz * f[2]; if (zz < .5) return null; var X = dx / zz * F, Y = (dy * u[1] + dz * u[2]) / zz * F; return [xc + X * cr + Y * sr, yc - (Y * cr - X * sr), zz]; };
       // the ring: tidy tracks of orange code, set along the curve like lines of text
