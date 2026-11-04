@@ -1764,3 +1764,15 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .section-head .lead, .section-head p { text-wrap: balance; }
 #chatbot .section-head .lead { position: relative; max-width: 30em; margin-left: auto; margin-right: auto; padding: 26px 18px 0; font-size: clamp(1.12rem, 1rem + .5vw, 1.4rem); line-height: 1.6; color: #dbe5ff; text-wrap: balance; }
 #chatbot .section-head .lead::before { content: "\201C"; position: absolute; left: 50%; top: -14px; transform: translateX(-50%); font: 700 64px/1 Georgia, 'Times New Roman', serif; color: #f7931e; text-shadow: 0 0 24px rgba(247, 147, 30, .45); }
+
+/* The AI choices, consolidated to three rows: logos in a fixed column, text beside them. */
+.aichips { grid-template-columns: 1fr !important; }
+.aichips li { display: grid; grid-template-columns: 252px 1fr; gap: 18px; align-items: center; }
+.ait { flex-wrap: nowrap; max-width: none; width: 252px; }
+.ait i { width: 44px; height: 44px; flex: none; }
+@media (max-width: 760px) { .aichips li { grid-template-columns: 1fr; gap: 10px; } .ait { width: auto; flex-wrap: wrap; } }
+
+/* The quotation marks sit inline: one just before the first word, one just after the last. */
+#chatbot .section-head .lead { padding-top: 0; }
+#chatbot .section-head .lead::before { content: "\201C"; position: static; display: inline; transform: none; margin-right: .08em; font: 700 1.9em/0 Georgia, 'Times New Roman', serif; vertical-align: -.2em; color: #f7931e; text-shadow: 0 0 18px rgba(247, 147, 30, .45); }
+#chatbot .section-head .lead::after { content: "\201D"; display: inline; margin-left: .08em; font: 700 1.9em/0 Georgia, 'Times New Roman', serif; vertical-align: -.2em; color: #f7931e; text-shadow: 0 0 18px rgba(247, 147, 30, .45); }
