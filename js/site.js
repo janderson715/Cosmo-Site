@@ -243,7 +243,7 @@
         var sp = parseFloat(s.style.getPropertyValue('--s')) || 3, off = parseFloat(s.style.getPropertyValue('--o')) || 0;
         var ANG = [28, 205, 152, 322, 95, 248, 15, 138, 292];
         var ang = ANG[k % ANG.length] * Math.PI / 180;
-        var q = ((p * sp + off) % 1 + 1) % 1;
+        var idle = (window.performance ? window.performance.now() / 150000 : 0) * sp * .5, q = ((p * sp + off + idle) % 1 + 1) % 1; // keeps drifting slowly on its own, and the scroll speeds it up
         var a = q < .12 ? q / .12 : q > .8 ? (1 - q) / .2 : 1;
         var dist = q * 80;
         s.style.opacity = (a * .9).toFixed(3);
@@ -259,6 +259,7 @@
     window.addEventListener('scroll', render, { passive: true });
     window.addEventListener('resize', render);
     render();
+    if (sky.length && 'IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) { var on = false, loop = function () { if (!on) return; render(); window.requestAnimationFrame(loop); }; new IntersectionObserver(function (es) { on = es[0].isIntersecting; if (on) loop(); }).observe(morph); }
   });
 
   // The pinned Overview: the screen stays, its pictures slide past as the four statements swap (like the laptop below), and the spiral galaxy turns with the scroll (back again when you scroll up).
@@ -311,7 +312,7 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       // the sky: many stars that drift with the scroll, near ones faster, with a little twinkle
       var tw = window.performance ? window.performance.now() / 1000 : 0;
-      for (var s = 0; s < sky.length; s++) { var S = sky[s], sx = (((S[0] * W - p * S[2] * 320) % W) + W) % W, sy = (((S[1] * H + p * S[2] * 110) % (H * .8)) + H * .8) % (H * .8); ctx.fillStyle = 'rgba(' + S[5] + ',' + ((.35 + S[2] * .6) * (.75 + .25 * Math.sin(tw * 1.2 + S[4]))).toFixed(2) + ')'; var q = S[3] * (S[2] > .7 ? 1.4 : 1); ctx.fillRect(sx, sy, q, q); }
+      for (var s = 0; s < sky.length; s++) { var S = sky[s], sx = (((S[0] * W - p * S[2] * 320 - tw * S[2] * 7) % W) + W) % W, sy = (((S[1] * H + p * S[2] * 110 + tw * S[2] * 2.5) % (H * .8)) + H * .8) % (H * .8); ctx.fillStyle = 'rgba(' + S[5] + ',' + ((.35 + S[2] * .6) * (.75 + .25 * Math.sin(tw * 1.2 + S[4]))).toFixed(2) + ')'; var q = S[3] * (S[2] > .7 ? 1.4 : 1); ctx.fillRect(sx, sy, q, q); }
       // the Earth: a huge dark sphere whose top edge curves across the bottom; its lights and links turn slowly about a tilted axis
       var Rp = W * 2.6, cx = W / 2, capH = H * .24, cy = H - capH + Rp, psi = p * .2 + tw * .003;
       var body = ctx.createRadialGradient(cx, cy, Rp * .93, cx, cy, Rp); body.addColorStop(0, '#02061a'); body.addColorStop(.9, '#040d2b'); body.addColorStop(1, '#0b2a6a'); ctx.fillStyle = body; ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 6.2832); ctx.fill();
