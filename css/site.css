@@ -1619,3 +1619,31 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* The air-gap boundary: a soft rounded rectangle with a faint edge and a gentle glow, not a hard dashed shape. */
 .airgap .boundary { fill: rgba(47, 107, 255, .05); stroke: rgba(79, 209, 255, .45); stroke-width: 1.2; stroke-dasharray: none; animation: none; filter: drop-shadow(0 0 14px rgba(79, 209, 255, .25)); }
+
+/* Security data flow: untrusted text -> read as data -> a person decides -> a sealed record. Packets travel along the connectors. */
+.layers-art { display: none; }
+.dflow { display: grid; grid-template-columns: 1fr 56px 1fr 56px 1fr 56px 1fr; align-items: stretch; max-width: 1100px; margin: clamp(22px, 3vw, 40px) auto 0; }
+.dflow .st { position: relative; padding: 18px 16px 18px; border: 1px solid rgba(79, 209, 255, .28); border-radius: 14px; background: linear-gradient(180deg, rgba(47, 107, 255, .14), rgba(4, 8, 32, .5)); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.dflow .st.bad { border-color: rgba(255, 90, 95, .4); background: linear-gradient(180deg, rgba(255, 90, 95, .12), rgba(4, 8, 32, .5)); }
+.dflow .st.good { border-color: rgba(54, 211, 153, .45); background: linear-gradient(180deg, rgba(54, 211, 153, .12), rgba(4, 8, 32, .5)); }
+.dflow .n { position: absolute; top: -13px; left: 14px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: #f7931e; color: #1a1000; font: 800 .8rem/1 var(--font); }
+.dflow h4 { margin: 4px 0 0; color: #fff; font-size: .98rem; line-height: 1.3; }
+.dflow p { margin: 0; color: #b9c5e6; font-size: .84rem; line-height: 1.45; }
+.dflow .ico svg { width: 46px; height: 46px; fill: none; stroke: #6fdcff; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgba(79, 209, 255, .5)); }
+.dflow .ico .a { stroke: #f7931e; stroke-width: 1.9; }
+.dflow .chips { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.dflow .chips em { font-style: normal; padding: 5px 10px; border: 1px solid rgba(255, 90, 95, .5); background: rgba(255, 90, 95, .08); color: #ffb3b6; font: 700 .64rem/1 var(--mono); letter-spacing: .04em; }
+.dflow .chain { display: flex; align-items: center; gap: 4px; }
+.dflow .chain b { padding: 6px 8px; border: 1px solid rgba(54, 211, 153, .6); background: rgba(54, 211, 153, .1); color: #6ee7b7; font: 700 .68rem/1 var(--mono); }
+.dflow .chain b + b::before { content: ""; display: inline-block; width: 8px; height: 2px; margin: 0 4px 3px -4px; background: #36d399; }
+.dflow .cn { position: relative; align-self: center; height: 2px; background: linear-gradient(90deg, rgba(79, 209, 255, .25), rgba(247, 147, 30, .45)); }
+.dflow .cn::after { content: ""; position: absolute; right: -2px; top: -5px; border-left: 9px solid #f7931e; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.dflow .cn i { position: absolute; top: -3px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: #f7931e; box-shadow: 0 0 10px #f7931e; animation: dfpk 2.4s linear infinite; }
+.dflow .cn i:nth-child(2) { animation-delay: -.8s; } .dflow .cn i:nth-child(3) { animation-delay: -1.6s; }
+@keyframes dfpk { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: calc(100% - 8px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dflow .cn i { animation: none; left: 45%; } }
+@media (max-width: 900px) { .dflow { grid-template-columns: 1fr; gap: 0; max-width: 420px; } .dflow .cn { width: 2px; height: 40px; margin: 0 auto; background: linear-gradient(180deg, rgba(79, 209, 255, .25), rgba(247, 147, 30, .45)); } .dflow .cn::after { right: auto; left: -5px; top: auto; bottom: -2px; border-top: 9px solid #f7931e; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 0; } .dflow .cn i { left: -3px; top: 0; animation-name: dfpv; } @keyframes dfpv { 0% { top: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: calc(100% - 8px); opacity: 0; } } }
+
+/* Square corners (Ray's rule) and a softer line for the air-gap boundary. */
+.airgap .boundary { rx: 0; stroke: rgba(79, 209, 255, .28); stroke-width: 1; filter: drop-shadow(0 0 22px rgba(79, 209, 255, .18)); }
+.dflow .st { border-radius: 0; }
