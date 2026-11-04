@@ -305,7 +305,6 @@
     for (i = 0; i < 260; i++) stars.push({ k: -1, a0: rnd() * 6.2832, rs: Math.sqrt(rnd()) * .9, w: (rnd() - .5) * .08, s: rnd() < .2 ? 2 : 1.2, tw: .6 + rnd() * 2.6, ph: rnd() * 6.28, c: palette[Math.floor(rnd() * palette.length)] });
     var tint = ['255,179,92', '120,200,255', '190,150,255', '110,225,200', '255,150,190'];
     var orbit = [ { f: .93, sp: .055, ph: 4.6, ar: .84 }, { f: .86, sp: -.07, ph: 5.9, ar: .8 }, { f: .92, sp: .06, ph: 2.9, ar: .8 }, { f: .8, sp: -.085, ph: 0.9, ar: .82 }, { f: .88, sp: .075, ph: 1.9, ar: .8 } ];
-    var omega = function (r) { return .13 / (.22 + r); };
     var size = function () { var r = box.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
     var frame = function (now) {
       raf = 0; var t = still ? 0 : now / 1000, cx = W / 2, cy = H / 2, Rx = W * .44, Ry = H * .44, k;
