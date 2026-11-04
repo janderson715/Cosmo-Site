@@ -1862,3 +1862,7 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .runs-gov p { margin: 0 0 8px; color: #b9c5e6; font-size: 1.02rem; line-height: 1.6; text-wrap: balance; }
 .runs-gov .muted { color: #8a97bd; font-size: .86rem; }
 #runs { padding-bottom: var(--pad); }
+
+/* Screens: the call-outs sit top right and change with the scroll, clear of the rings and the planet */
+#views .morph-texts .mstep { top: 21%; left: auto; right: 3%; text-align: right; width: min(21%, 330px); }
+#views .morph-texts .mstep:nth-child(odd), #views .morph-texts .mstep:nth-child(even) { left: auto; right: 3%; text-align: right; }
