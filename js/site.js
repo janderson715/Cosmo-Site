@@ -535,6 +535,9 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
   if (!form || !window.fetch) return;
   var email = form.getAttribute('data-email').trim();
   form.setAttribute('action', 'https://site-forms.janderson-6f5.workers.dev');
+  // When the page finished rendering. The Worker rejects anything sent in under 3 seconds.
+  var stamp = form.querySelector('[name="_t"]');
+  if (stamp) stamp.value = String(Date.now());
   var status = document.getElementById('form-status');
   var button = form.querySelector('button[type="submit"]');
   var label = button ? button.textContent : '';
@@ -553,7 +556,10 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
         if (res.ok && String(res.j.success) === 'true') { form.reset(); form.hidden = true; show('Thank you. Your message has been sent. We will be in touch to set up your demo.', false); }
         else throw new Error('not sent');
       })
-      .catch(function () { show('Sorry, your message did not go through. Please email ' + email + ' or call (571) 206-1401.', true); })
+      .catch(function () {
+        try { if (window.turnstile) window.turnstile.reset(); } catch (err) {}   // the token is single-use
+        show('Sorry, your message did not go through. Please email ' + email + ' or call (571) 206-1401.', true);
+      })
       .finally(function () { if (button) { button.disabled = false; button.textContent = label; } });
   });
 })();

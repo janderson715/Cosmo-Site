@@ -475,9 +475,9 @@ html:not(.js) .stage-text .panel-copy + .panel-copy { display: none; }
 .field { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; justify-items: start; }
 .field label { font-weight: 600; color: var(--navy); font-size: .96rem; }
 .field label .opt { font-weight: 400; color: var(--navy-muted); }
-.field input, .field textarea { width: 20rem; max-width: 100%; min-height: 48px; padding: 12px 14px; font: 400 1rem/1.4 var(--font); color: var(--navy); background: var(--surface-1); border: 1px solid #c2cce0; border-radius: 0; transition: border-color .15s, box-shadow .15s; }
+.field input, .field select, .field textarea { width: 20rem; max-width: 100%; min-height: 48px; padding: 12px 14px; font: 400 1rem/1.4 var(--font); color: var(--navy); background: var(--surface-1); border: 1px solid #c2cce0; border-radius: 0; transition: border-color .15s, box-shadow .15s; }
 .field textarea { width: 40rem; min-height: 168px; resize: vertical; line-height: 1.55; }
-.field input:focus, .field textarea:focus { outline: none; border-color: var(--cyan-dark); box-shadow: 0 0 0 4px rgba(9, 109, 150, .2); }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--cyan-dark); box-shadow: 0 0 0 4px rgba(9, 109, 150, .2); }
 .field input::placeholder, .field textarea::placeholder { color: #6b7691; }
 .hp { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; overflow: hidden; }
 .form small { color: var(--navy-muted); }
@@ -579,7 +579,7 @@ html:not(.js) .stage-text .panel-copy + .panel-copy { display: none; }
   .trust ul { flex-direction: column; align-items: flex-start; gap: 12px; padding: 20px 0; }
   .actions .btn { flex: 1 1 100%; }
   .pair { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .field, .field input, .field textarea { width: 100%; }
+  .field, .field input, .field select, .field textarea { width: 100%; }
   .foot-grid { grid-template-columns: 1fr; }
   .cypher-facts div { grid-template-columns: 6.5rem minmax(0, 1fr); }
   .device-laptop .lid { border-radius: 0; }
@@ -1894,3 +1894,6 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 }
 @media (max-width: 860px) { #views .morph-texts { position: relative; z-index: 3; background: linear-gradient(180deg, rgba(4,7,26,.82), rgba(4,7,26,.9)); border-radius: 12px; padding: 4px 18px; margin-top: 8px; } #views .morph-texts .mstep:first-child { border-top: 0; } }
 @media (max-width: 420px) { .botduo .botwin { left: auto !important; right: 0; width: min(240px, 66vw) !important; } }
+
+/* Fallback route for a real person the form turns away. */
+.alt-contact { margin-top: 14px; font-size: .95rem; opacity: .75; }
