@@ -1981,3 +1981,15 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .lab-svg .bh .cd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 600; }
 @media (prefers-reduced-motion: no-preference) { .lab-svg .bh .band { animation: bh-pulse 3.2s ease-in-out infinite; } }
 .lab-svg .cap.sm { font-size: 8.4px; letter-spacing: .1em; }
+
+/* the download is a small document icon, not a wide button */
+.lab-docs { display: block; }
+.docicon { display: inline-flex; align-items: center; gap: 20px; text-decoration: none; color: var(--ink); }
+.docicon svg { width: 92px; height: 120px; flex: none; filter: drop-shadow(0 10px 22px rgba(79,209,255,.22)); transition: transform .25s var(--ease), filter .25s var(--ease); }
+.docicon:hover svg, .docicon:focus-visible svg { transform: translateY(-5px) rotate(-2.5deg); filter: drop-shadow(0 14px 28px rgba(247,147,30,.38)); }
+.docicon:focus-visible { outline: 2px solid var(--orange); outline-offset: 6px; }
+.docicon .di-text b { display: block; font-size: 1.1rem; }
+.docicon .di-text em { display: block; margin-top: 4px; font-style: normal; font-size: .9rem; color: var(--muted); }
+.docicon .di-text i { display: block; margin-top: 10px; font: 600 .72rem/1 var(--font); font-style: normal; letter-spacing: .14em; text-transform: uppercase; color: var(--orange); }
+@media (prefers-reduced-motion: no-preference) { .docicon .di-badge { animation: di-nudge 2.6s ease-in-out infinite; } }
+@keyframes di-nudge { 50% { transform: translateY(2px); } }
