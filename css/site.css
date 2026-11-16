@@ -1993,3 +1993,9 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .docicon .di-text i { display: block; margin-top: 10px; font: 600 .72rem/1 var(--font); font-style: normal; letter-spacing: .14em; text-transform: uppercase; color: var(--orange); }
 @media (prefers-reduced-motion: no-preference) { .docicon .di-badge { animation: di-nudge 2.6s ease-in-out infinite; } }
 @keyframes di-nudge { 50% { transform: translateY(2px); } }
+
+/* the brochure download in the hero: the same small cosmic document icon as the lab section */
+.hero-doc { margin-top: 36px; display: flex; justify-content: center; }
+.hero-doc .docicon .di-text { text-align: left; }
+.hero-doc .docicon svg { width: 76px; height: 100px; }
+.docicon svg { filter: drop-shadow(0 0 10px rgba(247,147,30,.45)) drop-shadow(0 10px 22px rgba(79,209,255,.18)); }
