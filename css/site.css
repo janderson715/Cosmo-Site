@@ -1999,3 +1999,17 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .hero-doc .docicon .di-text { text-align: left; }
 .hero-doc .docicon svg { width: 76px; height: 100px; }
 .docicon svg { filter: drop-shadow(0 0 10px rgba(247,147,30,.45)) drop-shadow(0 10px 22px rgba(79,209,255,.18)); }
+
+/* the switchboard: status lights flicker, bad packets cross the lines, the alert is red */
+.lab-svg .alert rect { fill: rgba(255,90,95,.14); stroke: var(--red); stroke-width: 1.4; }
+.lab-svg .alert text { fill: var(--red); font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.lab-svg .led { opacity: .9; }
+.lab-svg .led.r { fill: #ff5a5f; } .lab-svg .led.g { fill: #36d399; } .lab-svg .led.a { fill: #f7931e; } .lab-svg .led.c { fill: #4fd1ff; } .lab-svg .led.o { fill: #f7931e; }
+.lab-svg .pkt circle { filter: drop-shadow(0 0 3px currentColor); }
+@media (prefers-reduced-motion: no-preference) {
+  .lab-svg .led { animation: led-blink 1.6s steps(1, end) infinite; }
+  .lab-svg .alert { animation: lab-alert-red 6s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) { .lab-svg .pkt, .lab-svg .flash { display: none; } }
+@keyframes led-blink { 0%, 100% { opacity: 1; } 22% { opacity: .15; } 38% { opacity: 1; } 58% { opacity: .35; } 74% { opacity: 1; } }
+@keyframes lab-alert-red { 0%, 48% { opacity: 0; transform: translateY(5px); } 53%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
