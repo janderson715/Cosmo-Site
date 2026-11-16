@@ -463,7 +463,9 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
     }
     for (i = 0; i < 1500; i++) stars.push(mk(-1, (rnd() * 2 - 1) * .98, (rnd() * 2 - 1) * .98));
     var tint = ['255,179,92', '120,200,255', '190,150,255', '110,225,200', '255,150,190'];
-    var orbit = [ { f: .93, sp: .055, ph: 4.6, ar: .84 }, { f: .86, sp: -.07, ph: 5.9, ar: .8 }, { f: .92, sp: .06, ph: 2.9, ar: .8 }, { f: .8, sp: -.085, ph: 0.9, ar: .82 }, { f: .88, sp: .075, ph: 1.9, ar: .8 } ];
+    var off = [0, 1, 2, 3, 4].map(function () { return { x: 0, y: 0 }; });   // how far each member has been steered off its own path
+    // One shared ring: five members equally spaced, moving the same way at the same speed, so their paths never cross and no name is ever covered.
+    var orbit = [0, 1, 2, 3, 4].map(function (n3) { return { f: .93, sp: .05, ph: 4.6 + n3 * 1.2566, ar: .9 }; });
     var fit = function (canvas, cx2) { var r = canvas.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2); canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr); cx2.setTransform(dpr, 0, 0, dpr, 0, 0); return r; };
     var size = function () { var r = fit(cv, ctx); W = r.width; H = r.height; if (bg) { var q = fit(bg, bctx); BW = q.width; BH = q.height; } };
     var frame = function (now) {
@@ -481,8 +483,35 @@ if (gal && !still) { gal.style.setProperty('--gx', (p * 300 - 30).toFixed(1) + '
       }
       var cx = W / 2, cy = H / 2, Rx = W * .44, Ry = H * .44;
       ctx.clearRect(0, 0, W, H);
+      // Where each member would be on its own path. Then they steer: members go around each other and around the central node, so every name stays
+      // readable. What must not be covered is the emblem and its name, so those are the shapes that are kept apart. The correction is eased in,
+      // so a member glides around another instead of jumping.
+      var P = [], easeK = still ? 1 : .16, it, a, b, d, sm = W < 700, EH = sm ? 34 : 46, LW = sm ? 40 : 48, LH = sm ? 11 : 14, LD = sm ? 52 : 78, MG = sm ? 8 : 12;
+      for (k = 0; k < orbit.length; k++) { var m0 = orbit[k], ang0 = m0.ph + t * m0.sp, fr0 = m0.f * (1 + .02 * Math.sin(t * .27 + k * 1.7)); P.push({ x: cx + Math.cos(ang0) * fr0 * Rx * .9, y: cy + Math.sin(ang0) * fr0 * Ry * .85 * m0.ar }); }
+      var Q = P.map(function (q, n2) { return { x: q.x + off[n2].x, y: q.y + off[n2].y }; });
+      // the visible parts of a member: its emblem, and its name above (upper half) or below (lower half)
+      var parts = function (q) { var dn = q.y >= cy ? 1 : -1; return [{ x: q.x, y: q.y, hw: EH, hh: EH }, { x: q.x, y: q.y + dn * LD, hw: LW, hh: LH }]; };
+      var CP = [{ x: cx, y: cy, hw: sm ? 40 : 56, hh: sm ? 40 : 56 }, { x: cx, y: cy + (sm ? 62 : 86), hw: sm ? 55 : 76, hh: sm ? 14 : 20 }];   // the central node and its name
+      var gap = function (r1, r2) { var ox = r1.hw + r2.hw + MG - Math.abs(r1.x - r2.x), oy = r1.hh + r2.hh + MG - Math.abs(r1.y - r2.y); return ox > 0 && oy > 0 ? { ox: ox, oy: oy } : null; };
+      for (it = 0; it < 10; it++) {
+        for (a = 0; a < Q.length; a++) for (b = a + 1; b < Q.length; b++) {
+          var pa = parts(Q[a]), pb = parts(Q[b]), ox = 0, oy = 0, i1, i2, g;
+          for (i1 = 0; i1 < 2; i1++) for (i2 = 0; i2 < 2; i2++) { g = gap(pa[i1], pb[i2]); if (g) { ox = Math.max(ox, g.ox); oy = Math.max(oy, g.oy); } }
+          if (ox > 0 && oy > 0) {
+            var dx = Q[b].x - Q[a].x, dy = Q[b].y - Q[a].y;
+            if (ox < oy) { d = (dx < 0 ? -1 : 1) * ox / 2; Q[a].x -= d; Q[b].x += d; } else { d = (dy < 0 ? -1 : 1) * oy / 2; Q[a].y -= d; Q[b].y += d; }
+          }
+        }
+        for (a = 0; a < Q.length; a++) {
+          var pm = parts(Q[a]), qx = 0, qy = 0, j1, j2, g2;
+          for (j1 = 0; j1 < 2; j1++) for (j2 = 0; j2 < 2; j2++) { g2 = gap(pm[j1], CP[j2]); if (g2) { if (g2.ox < g2.oy) qx = Math.max(qx, g2.ox); else qy = Math.max(qy, g2.oy); } }
+          if (qx > 0) Q[a].x += (Q[a].x < cx ? -1 : 1) * qx; else if (qy > 0) Q[a].y += (Q[a].y < cy ? -1 : 1) * qy;
+          Q[a].x = Math.max(LW + 4, Math.min(W - LW - 4, Q[a].x)); Q[a].y = Math.max(LD + LH + 4, Math.min(H - LD - LH - 4, Q[a].y));
+        }
+      }
+      for (k = 0; k < orbit.length; k++) { off[k].x += (Q[k].x - P[k].x - off[k].x) * easeK; off[k].y += (Q[k].y - P[k].y - off[k].y) * easeK; P[k] = { x: P[k].x + off[k].x, y: P[k].y + off[k].y }; }
       for (k = 0; k < orbit.length; k++) {
-        var m = orbit[k], ang = m.ph + t * m.sp, fr = m.f * (1 + .07 * Math.sin(t * .27 + k * 1.7)), mx = cx + Math.cos(ang) * fr * Rx * .9, my = cy + Math.sin(ang) * fr * Ry * .85 * m.ar, col = tint[k];
+        var m = orbit[k], mx = P[k].x, my = P[k].y, col = tint[k];
         ctx.strokeStyle = 'rgba(' + col + ',.22)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(mx, my); ctx.stroke();
         var pf = ((t * .32 + k * .2) % 1), p1 = Math.min(pf + .05, 1);
         ctx.strokeStyle = 'rgba(' + col + ',' + (.9 * Math.sin(pf * 3.14)).toFixed(2) + ')'; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx + (mx - cx) * pf, cy + (my - cy) * pf); ctx.lineTo(cx + (mx - cx) * p1, cy + (my - cy) * p1); ctx.stroke();

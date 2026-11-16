@@ -2013,3 +2013,13 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 @media (prefers-reduced-motion: reduce) { .lab-svg .pkt, .lab-svg .flash { display: none; } }
 @keyframes led-blink { 0%, 100% { opacity: 1; } 22% { opacity: .15; } 38% { opacity: 1; } 58% { opacity: .35; } 74% { opacity: 1; } }
 @keyframes lab-alert-red { 0%, 48% { opacity: 0; transform: translateY(5px); } 53%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+
+/* the malware node is a cyber black hole: a bright ring bends around a dark core, code streams in (same look as the lab diagram) */
+.neb-mal-svg { filter: drop-shadow(0 0 18px rgba(255, 120, 60, .5)); }
+.neb-mal-svg .cd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 600; }
+.neb-mal-svg .bhspin { transform-box: view-box; transform-origin: 0 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .neb-mal-svg .bhspin { animation: nebspin 16s linear infinite; }
+  .neb-mal-svg .bhband { animation: malpulse 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+}
+@media (prefers-reduced-motion: reduce) { .neb-mal-svg .bhspin, .neb-mal-svg .bhband { animation: none; } }
