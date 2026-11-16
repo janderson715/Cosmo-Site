@@ -15,6 +15,7 @@ The marketing website for C.O.S.M.O, built and supported by Cypher, LLC. It is p
 | `css/site.css` | All the styling. Colors are at the top, under `:root` |
 | `js/site.js` | Motion, the workflow tabs, the counters and the contact form. Every page is readable without it |
 | `assets/img/` | Screenshots, logos and the C.O.S.M.O Bot portrait |
+| `assets/docs/` | The Penetration Test Lab report PDF offered for download in the "Tested against real attacks" section (`#lab`) on the home page |
 | `CNAME` | Tells GitHub Pages the site lives at `cosmoplatform.ai`. Leave it as is |
 | `.nojekyll` | Tells GitHub Pages to publish the files exactly as they are. Leave it as is |
 

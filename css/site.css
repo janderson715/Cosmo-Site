@@ -1897,3 +1897,74 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 /* Fallback route for a real person the form turns away. */
 .alt-contact { margin-top: 14px; font-size: .95rem; opacity: .75; }
+
+/* ---- The lab test section (id="lab"): a diagram, three numbers and two downloads ---- */
+.lab { position: relative; overflow: hidden; }
+.lab::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 78% 18%, rgba(167,139,250,.16), transparent 70%), radial-gradient(50% 40% at 8% 90%, rgba(79,209,255,.10), transparent 70%); pointer-events: none; }
+.lab-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+.lab-fig { margin: 0; padding: 14px; border: 1px solid var(--border-2); background: linear-gradient(180deg, rgba(14,22,64,.7), rgba(6,10,34,.7)); box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+.lab-svg { display: block; width: 100%; height: auto; font-family: var(--font); }
+.lab-svg .flow { fill: none; stroke-width: 1.6; stroke-dasharray: 5 6; }
+.lab-svg .flow.red { stroke: var(--red); color: var(--red); } .lab-svg .flow.org { stroke: var(--orange); color: var(--orange); } .lab-svg .flow.cy { stroke: var(--cyan); color: var(--cyan); stroke-dasharray: 2 5; }
+@media (prefers-reduced-motion: no-preference) {
+  .lab-svg .flow { animation: lab-dash 1.6s linear infinite; }
+  .lab-svg .cosmo rect { animation: lab-pulse 2.8s ease-in-out infinite; }
+  .lab-svg .cglow { animation: lab-breathe 2.8s ease-in-out infinite; transform-origin: 500px 62px; }
+  .lab-svg .alert { animation: lab-alert 5.6s ease-in-out infinite; }
+}
+@keyframes lab-dash { to { stroke-dashoffset: -22; } }
+@keyframes lab-pulse { 50% { stroke-width: 2.6; filter: drop-shadow(0 0 8px rgba(167,139,250,.8)); } }
+@keyframes lab-breathe { 50% { opacity: .55; transform: scale(1.12); } }
+@keyframes lab-alert { 0%, 40% { opacity: 0; transform: translateY(6px); } 55%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.lab-copy h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.12; margin-bottom: 16px; }
+.lab-stats { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 26px 0; padding: 0; border-top: 1px solid var(--border-2); border-bottom: 1px solid var(--border-2); }
+.lab-stats li { padding: 16px 14px 16px 0; } .lab-stats li + li { padding-left: 16px; border-left: 1px solid var(--border); }
+.lab-stats b { display: block; font: 300 clamp(1.8rem, 3vw, 2.5rem)/1 var(--font); color: var(--cyan); letter-spacing: -.02em; }
+.lab-stats span { display: block; margin-top: 8px; font-size: .84rem; line-height: 1.4; color: var(--muted); }
+.lab-docs { display: grid; gap: 12px; }
+.lab-docs .doc { display: flex; align-items: center; gap: 16px; padding: 14px 18px; border: 1px solid var(--border-2); background: rgba(14,22,64,.55); color: var(--ink); text-decoration: none; transition: border-color .2s var(--ease), transform .2s var(--ease), background .2s var(--ease); }
+.lab-docs .doc:hover, .lab-docs .doc:focus-visible { border-color: var(--orange); background: rgba(247,147,30,.08); transform: translateY(-1px); }
+.lab-docs .doc svg { width: 26px; height: 26px; flex: none; fill: none; stroke: var(--orange); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.lab-docs .doc b { display: block; font-size: 1rem; } .lab-docs .doc em { display: block; margin-top: 3px; font-style: normal; font-size: .84rem; color: var(--muted); }
+@media (max-width: 900px) { .lab-grid { grid-template-columns: 1fr; } .lab-stats b { font-size: 1.7rem; } }
+@media (max-width: 480px) { .lab-stats { grid-template-columns: 1fr; } .lab-stats li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--border); } }
+
+/* cosmic lab backdrop: star chart rings with degree ticks, a slow instrument sweep, atom orbits (the logo's own motif) and a molecule lattice */
+.lab-bg { position: absolute; left: -14%; top: 50%; width: min(96vw, 1000px); aspect-ratio: 1; transform: translateY(-50%); pointer-events: none; opacity: .9; -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); }
+.lab-bg svg { width: 100%; height: 100%; display: block; }
+.lab-bg .orb, .lab-bg .sweep { transform-box: view-box; transform-origin: 0 0; }
+.lab-bg .sweep { transform-origin: 450px 450px; }
+@media (prefers-reduced-motion: no-preference) {
+  .lab-bg .orb { animation-name: lab-orbit; animation-timing-function: linear; animation-iteration-count: infinite; }
+  .lab-bg .sweep { animation: lab-sweep 14s linear infinite; }
+  .lab-bg .tw { animation: lab-twinkle 3.4s ease-in-out infinite; }
+  .lab-fig::after { animation: lab-scan 5.5s linear infinite; }
+}
+@keyframes lab-orbit { to { transform: rotate(360deg); } }
+@keyframes lab-sweep { to { transform: rotate(360deg); } }
+@keyframes lab-twinkle { 50% { opacity: .15; } }
+@keyframes lab-scan { 0% { top: 0; opacity: 0; } 8%, 92% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+.lab-grid { z-index: 1; }
+/* the figure becomes a specimen under glass: corner marks, a caption row, a scanning line */
+.lab-fig { position: relative; overflow: hidden; backdrop-filter: blur(2px); }
+.lab-fig::before { content: ""; position: absolute; inset: 8px; pointer-events: none; background:
+  linear-gradient(var(--cyan), var(--cyan)) top left / 16px 1.5px no-repeat, linear-gradient(var(--cyan), var(--cyan)) top left / 1.5px 16px no-repeat,
+  linear-gradient(var(--cyan), var(--cyan)) top right / 16px 1.5px no-repeat, linear-gradient(var(--cyan), var(--cyan)) top right / 1.5px 16px no-repeat,
+  linear-gradient(var(--cyan), var(--cyan)) bottom left / 16px 1.5px no-repeat, linear-gradient(var(--cyan), var(--cyan)) bottom left / 1.5px 16px no-repeat,
+  linear-gradient(var(--cyan), var(--cyan)) bottom right / 16px 1.5px no-repeat, linear-gradient(var(--cyan), var(--cyan)) bottom right / 1.5px 16px no-repeat; opacity: .75; }
+.lab-fig::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(79,209,255,.85), transparent); box-shadow: 0 0 14px rgba(79,209,255,.6); opacity: 0; }
+.lab-cap { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px 12px; font: 500 .68rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.lab-cap b { color: var(--cyan); font-weight: 600; }
+@media (max-width: 900px) { .lab-bg { left: 50%; top: 22%; transform: translate(-50%, -50%); width: 130vw; } }
+.section.lab > .lab-bg { position: absolute; left: -14%; top: 50%; z-index: 0; }
+@media (max-width: 900px) { .section.lab > .lab-bg { left: 50%; top: 22%; } }
+
+/* the lab diagram uses the site's own diagram language: square panels with a 3px colored top edge, rows with a dark glass tile, bold titles, muted second lines */
+.lab-svg .cap { font-size: 9.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.lab-svg .tile { fill: rgba(160,190,255,.07); stroke: rgba(160,190,255,.22); }
+.lab-svg .rl { stroke: rgba(140,170,255,.22); }
+.lab-svg .t1 { fill: #fff; font-size: 12px; font-weight: 700; }
+.lab-svg .t2 { fill: var(--muted); font-size: 9.6px; font-weight: 400; }
+.lab-svg .t1.big { font-size: 15px; }
+.lab-svg .alert rect { fill: rgba(247,147,30,.12); stroke: var(--orange); } .lab-svg .alert text { fill: var(--orange); font-size: 11px; font-weight: 700; }
+.lab-svg .flow { stroke-width: 1.4; } .lab-svg .flow.cy { stroke: rgba(79,209,255,.55); }
