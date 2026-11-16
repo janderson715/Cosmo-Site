@@ -1977,3 +1977,6 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
   .lab-svg .bh .aura { animation: lab-breathe 3.6s ease-in-out infinite; transform-origin: 60px 37px; }
 }
 @keyframes bh-pulse { 50% { stroke-width: 5.4; opacity: .8; } }
+
+.lab-svg .bh .cd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) { .lab-svg .bh .band { animation: bh-pulse 3.2s ease-in-out infinite; } }
