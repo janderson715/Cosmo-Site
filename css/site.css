@@ -1968,3 +1968,14 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 .lab-svg .t1.big { font-size: 15px; }
 .lab-svg .alert rect { fill: rgba(247,147,30,.12); stroke: var(--orange); } .lab-svg .alert text { fill: var(--orange); font-size: 11px; font-weight: 700; }
 .lab-svg .flow { stroke-width: 1.4; } .lab-svg .flow.cy { stroke: rgba(79,209,255,.55); }
+
+/* the hooded attacker, drawn in the cosmic style: star-filled hood, glowing eyes, laptop light, an orbit ring */
+.lab-svg .hk .bit { font: 600 8px var(--mono); fill: #ff5a5f; fill-opacity: .35; }
+.lab-svg .hk .orb { transform-box: view-box; transform-origin: 0 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .lab-svg .hk .orb { animation: lab-orbit 9s linear infinite; }
+  .lab-svg .hk .eyes { animation: hk-eyes 4.2s ease-in-out infinite; }
+  .lab-svg .hk .aura { animation: lab-breathe 3.6s ease-in-out infinite; transform-origin: 60px 58px; }
+  .lab-svg .hk .tw { animation: lab-twinkle 2.6s ease-in-out infinite; }
+}
+@keyframes hk-eyes { 0%, 46%, 54%, 100% { opacity: 1; } 50% { opacity: .15; } }
