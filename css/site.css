@@ -1980,3 +1980,4 @@ html:not(.js) .spin-texts { position: static; } html:not(.js) .spin-texts .ostep
 
 .lab-svg .bh .cd { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 600; }
 @media (prefers-reduced-motion: no-preference) { .lab-svg .bh .band { animation: bh-pulse 3.2s ease-in-out infinite; } }
+.lab-svg .cap.sm { font-size: 8.4px; letter-spacing: .1em; }
